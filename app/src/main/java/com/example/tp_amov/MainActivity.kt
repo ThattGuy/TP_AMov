@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tp_amov.ui.theme.LoginPage
+//import com.example.tp_amov.ui.theme.RegisterScreen
 //import com.example.tp_amov.ui.theme.PreviewLoginScreen
 import com.example.tp_amov.ui.theme.TP_AmovTheme
 import com.google.firebase.FirebaseApp
@@ -29,7 +30,7 @@ class EGuide : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 //    Greeting("Android")
                 LoginPage().PreviewLoginScreen()
-
+                //RegisterScreen().RegisterScreenPreview()
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.tp_amov.ui.theme
+package pt.isec.amov.tp.eguide.ui.theme
 
 import android.app.Activity
 import android.os.Build

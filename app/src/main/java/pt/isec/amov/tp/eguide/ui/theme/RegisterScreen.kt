@@ -1,4 +1,4 @@
-package com.example.tp_amov.ui.theme
+package pt.isec.amov.tp.eguide.ui.theme
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tp_amov.R
+import pt.isec.amov.tp.eguide.R
 
 class RegisterScreen {
     @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package com.example.tp_amov
+package pt.isec.amov.tp.eguide
 
 import org.junit.Test
 

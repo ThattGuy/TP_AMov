@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tp_amov"
+    namespace = "pt.isec.amov.tp.eguide"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.tp_amov"
+        applicationId = "pt.isec.amov.tp.eguide"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

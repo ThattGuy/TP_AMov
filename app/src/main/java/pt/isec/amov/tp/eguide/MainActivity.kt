@@ -1,4 +1,4 @@
-package com.example.tp_amov
+package pt.isec.amov.tp.eguide
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,9 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.tp_amov.ui.theme.LoginPage
+import pt.isec.amov.tp.eguide.ui.theme.LoginPage
 //import com.example.tp_amov.ui.theme.PreviewLoginScreen
-import com.example.tp_amov.ui.theme.TP_AmovTheme
+import pt.isec.amov.tp.eguide.ui.theme.TP_AmovTheme
 import com.google.firebase.FirebaseApp
 
 

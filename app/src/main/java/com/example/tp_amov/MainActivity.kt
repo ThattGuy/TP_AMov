@@ -1,6 +1,5 @@
 package com.example.tp_amov
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,9 +26,7 @@ class EGuide : ComponentActivity() {
             TP_AmovTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                //    Greeting("Android")
                 LoginPage().PreviewLoginScreen()
-
                 }
             }
         }

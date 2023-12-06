@@ -83,7 +83,7 @@ class LoginPage {
                 Text("Login")
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {  }) {
 
                 Text("Register")
 

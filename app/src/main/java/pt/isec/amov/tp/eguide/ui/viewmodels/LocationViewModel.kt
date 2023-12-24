@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
-class LocationViewModelFactory(private val locationHandler:LocationHandler)
+class LocationViewModelFactory(private val locationHandler: LocationHandler)
     :ViewModelProvider.Factory{
     override fun<T :ViewModel>create(modelClass:Class<T>):T{
         @Suppress("UNCHECKED_CAST")
@@ -18,10 +18,9 @@ class LocationViewModelFactory(private val locationHandler:LocationHandler)
 }
 
 data
-
 class Coordinates(val team:String, val latitude :Double, val longitude:Double)
 
-class LocationViewModel(private val locationHandler:LocationHandler) :ViewModel(){
+class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel(){
 
     val isLogged = MutableLiveData(false)
     val POIs=listOf(

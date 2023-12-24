@@ -1,4 +1,4 @@
-package pt.isec.amov.tp.eguide.ui.screens
+package pt.isec.amov.tp.eguide.ui.screens.auth
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -32,20 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isec.amov.tp.eguide.R
-import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
+import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
-    var name by remember { mutableStateOf("Type here...") }
-    var username by remember { mutableStateOf("Type here...") }
-    var email by remember { mutableStateOf("Type here...") }
-    var password by remember { mutableStateOf("Type here...") }
-    var cpassword by remember { mutableStateOf("Type here...") }
+fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel) {
+    var name = remember { mutableStateOf("") }
+    var username = remember { mutableStateOf("") }
+    val email = remember {mutableStateOf("")}
+    var password = remember { mutableStateOf("") }
+    var cpassword = remember { mutableStateOf("") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,15 +62,48 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) 
             modifier = Modifier.size(150.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        TextBox("Name", name);
+        OutlinedTextField(
+            value = name.value,
+            onValueChange = { name.value = it },
+            label = { Text("Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        TextBox("Username", username);
+        OutlinedTextField(
+            value = username.value,
+            onValueChange = { username.value = it },
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        TextBox("E-mail", email);
+        OutlinedTextField(
+            value = email.value,
+            onValueChange = { email.value = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                autoCorrect = true, // Enable auto-correction
+                capitalization = KeyboardCapitalization.None
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { /* Define action on Done key press */ }
+            )
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        TextBox("New Password", password);
+        OutlinedTextField(
+            value = password.value,
+            onValueChange = { password.value = it },
+            label = { Text("New Password") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        TextBox("Confirm New Password", cpassword);
+        OutlinedTextField(
+            value = cpassword.value,
+            onValueChange = { cpassword.value = it },
+            label = { Text("Confirm New Password") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(50.dp))
 
         Row(
@@ -76,13 +111,18 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) 
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = {  }) {
-                Text("Create Account")
+            Button(onClick = {
+                viewModel.createUserWithEmail(
+                    name.value,
+                    username.value,
+                    email.value,
+                    password.value,
+                    cpassword.value
+                )
+            }) {
+                Text("Register")
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = { /*TODO*/ }) {
-                Text("Login")
-            }
+
         }
     }
 }

@@ -3,7 +3,8 @@ enum class Screens(display: String) {
     Login("Login"),
     REGISTER("Register"),
     MAIN("Main"),
-    LIST_LOCATIONS("ListLocation");
+    LIST_LOCATIONS("ListLocation"),
+    LIST_POINTS_OF_INTEREST("ListPointsOfInterest");
 
     val route : String
         get() = this.toString();

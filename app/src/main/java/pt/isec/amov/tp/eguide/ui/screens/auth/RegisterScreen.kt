@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +45,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onRegister: () -> Unit) {
+fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuccess: () -> Unit) {
     var name = remember { mutableStateOf("") }
     var username = remember { mutableStateOf("") }
     val email = remember {mutableStateOf("")}
@@ -52,6 +53,11 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onReg
     var cpassword = remember { mutableStateOf("") }
     val error by remember {viewModel.error}
     val user by remember {viewModel.user}
+
+    LaunchedEffect(key1 = user) {
+        if (user !=null && error == null)
+            onSuccess()
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

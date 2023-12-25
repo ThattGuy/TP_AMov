@@ -19,17 +19,16 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel, locationViewModel: LocationViewModel) {
     NavHost(
         navController = navController,
-        //startDestination = Screens.Login.route
         startDestination = Screens.Login.route
     ) {
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
-                navController.navigate("Main")
+                navController.navigate(Screens.MAIN.route)
             }
         }
         composable(Screens.REGISTER.route) {
             RegisterScreen(viewModel = authViewModel){
-                navController.navigate("Main")
+                navController.navigate(Screens.MAIN.route)
             }
         }
         composable(Screens.MAIN.route) {

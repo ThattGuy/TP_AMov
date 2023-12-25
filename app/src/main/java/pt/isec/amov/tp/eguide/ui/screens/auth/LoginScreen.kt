@@ -37,7 +37,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //onLogin: (String, String) -> Unit
-fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navController: NavController, onLogin: () -> Unit) {
+fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navController: NavController, onSuccess: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val error by remember {viewModel.error}
@@ -45,7 +45,7 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
 
     LaunchedEffect(key1 = user) {
         if (user !=null && error == null)
-            onLogin()
+            onSuccess()
     }
 
     Column(

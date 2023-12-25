@@ -1,6 +1,7 @@
 package pt.isec.amov.tp.eguide.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -41,6 +42,11 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     navController = rememberNavController()
                     SetupNavGraph(navController = navController, authViewModel = authViewModel, locationViewModel = locationViewModel)
+                }
+            }
+            intent.extras?.apply {
+                for(k in keySet()) {
+                    Log.i("MainActivity", "Extras: $k -> ${get(k)}")
                 }
             }
         }

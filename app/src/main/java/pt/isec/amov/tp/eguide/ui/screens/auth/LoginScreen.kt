@@ -21,7 +21,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import pt.isec.amov.tp.eguide.R
@@ -31,9 +37,16 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //onLogin: (String, String) -> Unit
-fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navController: NavController) {
-    var username by remember { mutableStateOf("") }
+fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navController: NavController, onLogin: () -> Unit) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val error by remember {viewModel.error}
+    val user by remember {viewModel.user}
+
+    LaunchedEffect(key1 = user) {
+        if (user !=null && error == null)
+            onLogin()
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,8 +70,8 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
-            value = username,
-            onValueChange = { username = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Username") }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -69,12 +82,27 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /*onLogin(username, password)*/ }) {
+        Button(onClick = { viewModel.loginWithEmail(email, password) }) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { navController.navigate("register") }) {
             Text("Register")
+        }
+        if (error != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = error!!,
+                    color = Color.Red
+                )
+            }
         }
     }
 }

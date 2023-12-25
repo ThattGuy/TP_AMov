@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -42,12 +44,14 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel) {
+fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onRegister: () -> Unit) {
     var name = remember { mutableStateOf("") }
     var username = remember { mutableStateOf("") }
     val email = remember {mutableStateOf("")}
     var password = remember { mutableStateOf("") }
     var cpassword = remember { mutableStateOf("") }
+    val error by remember {viewModel.error}
+    val user by remember {viewModel.user}
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,7 +126,21 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel) {
             }) {
                 Text("Register")
             }
-
+        }
+        if (error != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = error!!,
+                    color = Color.Red
+                )
+            }
         }
     }
 }

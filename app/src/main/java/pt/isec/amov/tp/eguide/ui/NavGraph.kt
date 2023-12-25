@@ -20,13 +20,17 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
     NavHost(
         navController = navController,
         //startDestination = Screens.Login.route
-        startDestination = Screens.LIST_LOCATIONS.route
+        startDestination = Screens.Login.route
     ) {
         composable(Screens.Login.route) {
-            LoginScreen(viewModel = authViewModel, navController = navController)
+            LoginScreen(viewModel = authViewModel, navController = navController){
+                navController.navigate("Main")
+            }
         }
         composable(Screens.REGISTER.route) {
-            RegisterScreen(viewModel = authViewModel)
+            RegisterScreen(viewModel = authViewModel){
+                navController.navigate("Main")
+            }
         }
         composable(Screens.MAIN.route) {
             MainScreen(viewModel = locationViewModel)

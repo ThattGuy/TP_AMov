@@ -11,8 +11,10 @@ class FAuthUtil {
         val currentUser: FirebaseUser?
             get() = auth.currentUser
 
-        fun createUserWithEmail(email: String, password: String,
-                                onResult: (Throwable?) -> Unit) {
+        fun createUserWithEmail(
+            email: String, password: String,
+            onResult: (Throwable?) -> Unit
+        ) {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)

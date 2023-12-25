@@ -64,7 +64,7 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun signInWithEmail(email: String, password: String) {
+    fun loginWithEmail(email: String, password: String) {
         if (email.isBlank() || password.isBlank())
             return
         viewModelScope.launch {

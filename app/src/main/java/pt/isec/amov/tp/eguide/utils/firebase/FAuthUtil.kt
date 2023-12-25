@@ -1,6 +1,7 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -18,6 +19,14 @@ class FAuthUtil {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { result ->
                     onResult(result.exception)
+                }
+        }
+
+        fun signInWithGoogle(token: String, onResult: (Throwable?) -> Unit) {
+            val credential = GoogleAuthProvider.getCredential(token, null)
+            auth.signInWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    onResult(task.exception)
                 }
         }
 

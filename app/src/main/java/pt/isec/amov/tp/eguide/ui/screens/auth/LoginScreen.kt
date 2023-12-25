@@ -1,5 +1,7 @@
 package pt.isec.amov.tp.eguide.ui.screens.auth
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,8 +34,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
@@ -42,6 +51,15 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
     var password by remember { mutableStateOf("") }
     val error by remember {viewModel.error}
     val user by remember {viewModel.user}
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        task.addOnSuccessListener { account ->
+            viewModel.signInWithGoogle(account.idToken!!)
+        }
+    }
 
     LaunchedEffect(key1 = user) {
         if (user !=null && error == null)
@@ -88,6 +106,19 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { navController.navigate("register") }) {
             Text("Register")
+        }
+
+        Button(onClick = {
+            val signInIntent = GoogleSignIn.getClient(
+                context,
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(context.getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+            ).signInIntent
+            launcher.launch(signInIntent)
+        }) {
+            Text("Sign in with Google")
         }
         if (error != null) {
             Box(

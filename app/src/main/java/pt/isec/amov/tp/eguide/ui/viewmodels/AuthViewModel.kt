@@ -63,6 +63,19 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun signInWithGoogle(token: String) {
+        viewModelScope.launch {
+            FAuthUtil.signInWithGoogle(token) { exception ->
+                if (exception == null) {
+                    _user.value = FAuthUtil.currentUser?.toUser()
+                    _error.value = null
+                } else {
+                    _error.value = exception.message
+                }
+            }
+        }
+    }
+
 
     fun loginWithEmail(email: String, password: String) {
         if (email.isBlank() || password.isBlank())

@@ -11,14 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import pt.isec.amov.tp.eguide.ui.theme.TP_AmovTheme
 import com.google.firebase.FirebaseApp
 import pt.isec.amov.tp.eguide.EGuide
-import pt.isec.amov.tp.eguide.ui.screens.LoginScreen
+import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
 import pt.isec.amov.tp.eguide.ui.screens.MainScreen
+import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 
@@ -26,9 +26,10 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 class MainActivity : ComponentActivity() {
 
     private val app by lazy { application as EGuide }
-    private val viewModel: LocationViewModel by viewModels {
+    private val locationViewModel: LocationViewModel by viewModels {
         LocationViewModelFactory(app.locationHandler)
     }
+    private val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lateinit var navController: NavHostController
@@ -39,8 +40,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     navController = rememberNavController()
-                    SetupNavGraph(navController = navController, viewModel = viewModel)
-
+                    SetupNavGraph(navController = navController, authViewModel = authViewModel, locationViewModel = locationViewModel)
                 }
             }
         }

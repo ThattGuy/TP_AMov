@@ -8,7 +8,7 @@ import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
 class EGuide : Application() {
     /*  val locationHandler : LocationHandler by lazy {
-            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+            val locationManager = getSystem     Service(LOCATION_SERVICE) as LocationManager
             LocationManagerHandler(locationManager)
         }*/
 

@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "120466477351",
-    "project_id": "tpamov-5c7ba",
-    "storage_bucket": "tpamov-5c7ba.appspot.com"
+    "project_number": "894709979599",
+    "project_id": "eguide-c4167",
+    "storage_bucket": "eguide-c4167.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:120466477351:android:9b1015d288fd664c1b1902",
+        "mobilesdk_app_id": "1:894709979599:android:37e364f6659cad271e5aba",
         "android_client_info": {
-          "package_name": "pt.isec.amov.tp"
+          "package_name": "pt.isec.amov.tp.eguide"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "894709979599-c6me7k5ecbnlug22ku0rist3b2h6ogvn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt.isec.amov.tp.eguide",
+            "certificate_hash": "1a069e1bf639dd720f1690e61e5ba98e248e8998"
+          }
+        },
+        {
+          "client_id": "894709979599-o829eh9fsk9i07gon66be7angvamjka4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyC4OZeSep-yolXxFpYUvOef7hFA7-F5njc"
+          "current_key": "AIzaSyC81HoetIMpo4-GJh_tCextpbhc-fKQmSw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894709979599-o829eh9fsk9i07gon66be7angvamjka4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import pt.isec.amov.tp.eguide.ui.screens.CreateLocationScreen
 import pt.isec.amov.tp.eguide.ui.screens.ListLocations
 import pt.isec.amov.tp.eguide.ui.screens.MainScreen
 import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
@@ -19,7 +20,8 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel, locationViewModel: LocationViewModel) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Login.route
+        //startDestination = Screens.Login.route
+        startDestination = Screens.REGISTER_LOCATION.route
     ) {
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
@@ -36,6 +38,9 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
         }
         composable(Screens.LIST_LOCATIONS.route){
             ListLocations(viewModel = locationViewModel, navController = navController)
+        }
+        composable(Screens.REGISTER_LOCATION.route){
+            CreateLocationScreen()
         }
     }
 }

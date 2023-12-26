@@ -4,6 +4,7 @@ enum class Screens(display: String) {
     REGISTER("Register"),
     MAIN("Main"),
     LIST_LOCATIONS("ListLocation"),
+    REGISTER_LOCATION("RegisterLocation"),
     LIST_POINTS_OF_INTEREST("ListPointsOfInterest");
 
     val route : String

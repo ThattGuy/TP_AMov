@@ -5,6 +5,7 @@ enum class Screens(display: String) {
     MAIN("Main"),
     LIST_LOCATIONS("ListLocation"),
     REGISTER_LOCATION("RegisterLocation"),
+    REGISTER_CATEGORY("RegisterCategory"),
     LIST_POINTS_OF_INTEREST("ListPointsOfInterest");
 
     val route : String

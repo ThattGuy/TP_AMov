@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import pt.isec.amov.tp.eguide.ui.screens.CreateLocationScreen
 import pt.isec.amov.tp.eguide.ui.screens.ListLocations
 import pt.isec.amov.tp.eguide.ui.screens.MainScreen
+import pt.isec.amov.tp.eguide.ui.screens.RegisterCategory
 import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
@@ -21,7 +22,7 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
     NavHost(
         navController = navController,
         //startDestination = Screens.Login.route
-        startDestination = Screens.REGISTER_LOCATION.route
+        startDestination = Screens.REGISTER_CATEGORY.route
     ) {
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
@@ -41,6 +42,9 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
         }
         composable(Screens.REGISTER_LOCATION.route){
             CreateLocationScreen()
+        }
+        composable(Screens.REGISTER_CATEGORY.route){
+            RegisterCategory()
         }
     }
 }

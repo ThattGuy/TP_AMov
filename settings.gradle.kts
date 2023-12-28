@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TP_Amov"
+rootProject.name = "Eguide"
 include(":app")

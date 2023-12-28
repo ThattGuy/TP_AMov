@@ -22,11 +22,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import pt.isec.amov.tp.eguide.ui.theme.TP_AmovTheme
+import pt.isec.amov.tp.eguide.ui.theme.EGuide_Theme
 import com.google.firebase.FirebaseApp
 import pt.isec.amov.tp.eguide.EGuide
-import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
-import pt.isec.amov.tp.eguide.ui.screens.MainScreen
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
@@ -45,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
         FirebaseApp.initializeApp(this)
         setContent {
-            TP_AmovTheme {
+            EGuide_Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     navController = rememberNavController()
@@ -159,7 +157,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    TP_AmovTheme {
+    EGuide_Theme {
         Greeting("Android")
     }
 }

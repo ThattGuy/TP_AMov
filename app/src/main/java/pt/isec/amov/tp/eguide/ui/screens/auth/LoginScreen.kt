@@ -115,7 +115,7 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
             ).signInIntent
             launcher.launch(signInIntent)
         }) {
-            Text("Sign in with Google")
+            Text("Continue with Google")
         }
         if (error != null) {
             Box(

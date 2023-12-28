@@ -77,6 +77,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun signInWithGoogle(token: String) {
+
         viewModelScope.launch {
             FAuthUtil.signInWithGoogle(token) { exception ->
                 if (exception == null) {

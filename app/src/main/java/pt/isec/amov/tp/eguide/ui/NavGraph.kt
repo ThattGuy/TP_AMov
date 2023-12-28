@@ -40,7 +40,7 @@ fun SetupNavGraph(navController: NavHostController,
         }
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
-                navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                navController.navigate(Screens.MAIN.route)
             }
         }
         composable(Screens.REGISTER.route) {
@@ -52,10 +52,11 @@ fun SetupNavGraph(navController: NavHostController,
             MainScreen(viewModel = locationViewModel)
         }
         composable(Screens.LIST_LOCATIONS.route){
-            ListLocations(viewModel = locationViewModel, navController = navController)
+            //ListLocations(viewModel = locationViewModel, navController = navController)
+            ListLocations(viewModel = locationViewModel)
         }
         composable(Screens.REGISTER_LOCATION.route){
-            CreateLocationScreen()
+            CreateLocationScreen(locationViewModel)
         }
         composable(Screens.REGISTER_CATEGORY.route){
             RegisterCategory(locationViewModel)

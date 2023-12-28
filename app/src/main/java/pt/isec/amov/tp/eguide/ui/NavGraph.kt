@@ -44,7 +44,7 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
             CreateLocationScreen()
         }
         composable(Screens.REGISTER_CATEGORY.route){
-            RegisterCategory()
+            RegisterCategory(locationViewModel)
         }
     }
 }

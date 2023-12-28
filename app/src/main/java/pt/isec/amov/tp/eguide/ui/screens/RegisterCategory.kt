@@ -15,9 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 @Composable
-fun RegisterCategory(){
+fun RegisterCategory(viewModel: LocationViewModel){
 
 
 
@@ -35,7 +36,8 @@ fun RegisterCategory(){
         TextField(value = categoryDescription, onValueChange = { categoryDescription = it } , label = {Text("Descrição da categoria")})
         Button(onClick = {
             print("\n\n\n" + categoryName)
-            val nameData = hashMapOf("Name" to categoryName, "Description" to categoryDescription)
+            viewModel.insertCategoryIntoDB(categoryName,categoryDescription)
+            /*val nameData = hashMapOf("Name" to categoryName, "Description" to categoryDescription)
 
 
             db.collection("Categories").document(categoryName).set(nameData)
@@ -45,7 +47,7 @@ fun RegisterCategory(){
                 .addOnFailureListener { e->
                     Log.i(TAG, "addDataToFirestore: ${e.message}")
                 }
-
+*/
 
         }) {
             Text(text = "Save")

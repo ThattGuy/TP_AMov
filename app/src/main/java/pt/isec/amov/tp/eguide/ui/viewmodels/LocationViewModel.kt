@@ -1,11 +1,16 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
+import android.content.ContentValues
 import android.location.Location
+import android.util.Log
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
 
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
@@ -17,8 +22,7 @@ class LocationViewModelFactory(private val locationHandler: LocationHandler)
     }
 }
 
-data
-class Coordinates(val team:String, val latitude :Double, val longitude:Double)
+data class Coordinates(val team:String, val latitude :Double, val longitude:Double)
 
 class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel(){
 
@@ -58,4 +62,11 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         super.onCleared()
         stopLocationUpdates()
     }
+
+    fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
+
+       FStorageUtil.insertCategoryIntoDB(categoryName,categoryDescription)
+    }
+
+
 }

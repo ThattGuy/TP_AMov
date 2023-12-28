@@ -1,10 +1,12 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
+import android.content.ContentValues
 import android.content.res.AssetManager
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -46,6 +48,22 @@ class FStorageUtil {
                     onResult(e)
                 }
         }
+
+         fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
+            val db = com.google.firebase.Firebase.firestore
+            val nameData = hashMapOf("Name" to categoryName, "Description" to categoryDescription)
+
+
+            db.collection("Categories").document(categoryName).set(nameData)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+
+        }
+
 
         /*
         fun updateDataInFirestoreTrans(onResult: (Throwable?) -> Unit) {

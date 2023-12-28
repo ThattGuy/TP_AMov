@@ -24,7 +24,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity()  {
 
     private val app by lazy { application as EGuide }
     private val locationViewModel: LocationViewModel by viewModels {

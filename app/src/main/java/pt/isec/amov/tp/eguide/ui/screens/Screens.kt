@@ -1,5 +1,6 @@
 package pt.isec.amov.tp.eguide.ui.screens
 enum class Screens(display: String) {
+    LAYOUT_BARS("Layout"),
     Login("Login"),
     REGISTER("Register"),
     MAIN("Main"),

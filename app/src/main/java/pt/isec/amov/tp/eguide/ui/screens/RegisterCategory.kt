@@ -15,11 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import pt.isec.amov.tp.eguide.data.PointOfInterest
 
 @Composable
-fun RegisterCategory(){
-
-
+fun RegisterCategory() {
 
 
     val db = Firebase.firestore

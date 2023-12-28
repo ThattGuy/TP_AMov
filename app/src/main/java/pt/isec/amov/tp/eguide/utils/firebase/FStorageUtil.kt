@@ -13,10 +13,11 @@ import java.io.InputStream
 
 class FStorageUtil {
     companion object {
-        fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
+        fun addCategoryToFirestore(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
 
             val scores = hashMapOf(
+                //categorias
                 "nrgames" to 0,
                 "topscore" to 0
             )
@@ -47,7 +48,7 @@ class FStorageUtil {
                 }
         }
 
-        /*
+
         fun updateDataInFirestoreTrans(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val v = db.collection("Scores").document("Level1")
@@ -142,7 +143,7 @@ class FStorageUtil {
             }
 
 
-        }*/
+        }
 
     }
 }

@@ -21,23 +21,40 @@ import androidx.compose.ui.Alignment
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateLocationScreen() {
+fun CreateLocationScreen(viewModel: LocationViewModel) {
 
 
     var description by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("")}
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        TextField(value = name, onValueChange = {name = it}, placeholder = { Text(text = "Nome")})
         TextField(value = description, onValueChange = {description = it}, placeholder = { Text(text = "Descrição")})
-        
+
         Button(onClick = {/*TODO*/}){
             Text(text = "Selecionar imagem")
         }
+
+        Button(onClick = {
+            print("\n\n\n Vim aquiii")
+            location = viewModel._currentLocation.value.toString()
+            viewModel.insertLocationIntoDB(name,description)
+
+
+        }){
+            Text(text = "Salvar")
+        }
+
+
 
     }
 

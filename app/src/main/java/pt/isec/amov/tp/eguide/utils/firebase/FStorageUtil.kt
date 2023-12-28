@@ -3,6 +3,7 @@ package pt.isec.amov.tp.eguide.utils.firebase
 import android.content.ContentValues
 import android.content.res.AssetManager
 import android.util.Log
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Source
@@ -62,6 +63,20 @@ class FStorageUtil {
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
 
+        }
+
+        fun insertLocationIntoDB(name: String,description: String, locationCoordinates : String)
+        {
+            val db = Firebase.firestore
+            val data = hashMapOf("Description" to description,
+                                "Coordinates" to locationCoordinates)
+            db.collection("Locations").document(name).set(data)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
         }
 
 

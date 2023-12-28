@@ -54,6 +54,7 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
     ) { result ->
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         task.addOnSuccessListener { account ->
+
             viewModel.signInWithGoogle(account.idToken!!)
         }
     }
@@ -106,6 +107,7 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
         }
 
         Button(onClick = {
+            print("\n\n\nvim aqui")
             val signInIntent = GoogleSignIn.getClient(
                 context,
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

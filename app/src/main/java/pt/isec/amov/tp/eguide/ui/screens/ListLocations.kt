@@ -30,7 +30,7 @@ fun LocationItem(location: Location) {
 }
 
 @Composable
-fun ListLocations(modifier: Modifier = Modifier, viewModel: LocationViewModel, navController: NavController) {
+fun ListLocations(viewModel: LocationViewModel) {
     val listaTetse  = ArrayList<Location>()
     for(i in 1..100)
     {

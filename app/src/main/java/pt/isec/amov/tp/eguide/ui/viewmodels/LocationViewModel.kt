@@ -35,7 +35,7 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
     var fineLocationPermission=false
     var backgroundLocationPermission=false
 
-    private val _currentLocation=MutableLiveData(Location(null))
+     val _currentLocation=MutableLiveData(Location(null))
     val currentLocation:LiveData<Location>
         get()=_currentLocation
 
@@ -68,5 +68,20 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
        FStorageUtil.insertCategoryIntoDB(categoryName,categoryDescription)
     }
 
+   fun insertLocationIntoDB(name : String,description: String){
+
+       val location = extrairString(this._currentLocation.value.toString())
+
+       print("\n\n\n\n localização: " +location)
+       FStorageUtil.insertLocationIntoDB(name,description,location!!)
+
+   }
+
+    private fun extrairString(str: String): String? {
+        val regex = Regex("fused\\s(.*?)\\shAcc")
+        val matchResult = regex.find(str)
+
+        return matchResult?.groups?.get(1)?.value
+    }
 
 }

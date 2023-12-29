@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
 
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
@@ -112,6 +113,15 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
     ) {
 
         FStorageUtil.insertPointOfInterest(name,description,coordinates,this.locationSelected)
+    }
+
+    fun getPointsOfInterest() : ArrayList<PointOfInterest> {
+
+        var listaToReturn = ArrayList<PointOfInterest>()
+        runBlocking {
+            listaToReturn = FStorageUtil.providePointsOfInterest(locationSelected?.name)
+        }
+        return listaToReturn
     }
 
 }

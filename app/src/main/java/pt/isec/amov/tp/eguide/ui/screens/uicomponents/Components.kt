@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import pt.isec.amov.tp.eguide.ui.screens.Screens
@@ -49,7 +48,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Layout_Bars(
-    showBottomBar: Boolean = false,
+    showBottomBar: Boolean = true,
     viewModel: AuthViewModel,
     navController : NavHostController,
     content: @Composable (PaddingValues) -> Unit

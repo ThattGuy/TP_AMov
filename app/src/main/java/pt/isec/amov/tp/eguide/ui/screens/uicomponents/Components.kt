@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import pt.isec.amov.tp.eguide.ui.screens.Screens
@@ -109,7 +111,10 @@ fun Layout_Bars(
 
                 OverlayMenu("Menu", showMenu, onDismiss = { showMenu = false },navController) {
                     // Logic for menu item click, e.g., navigate
-                    navController.navigate("your_route_here")
+                    navController.navigate(Screens.MAIN.route)
+                    navController.navigate(Screens.LIST_LOCATIONS.route)
+                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                    navController.navigate(Screens.REGISTER_CATEGORY.route)
                     }
                 }
         }
@@ -128,27 +133,50 @@ fun OverlayMenu(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Gray.copy(alpha = 0.5f))
+                .background(Color.Gray.copy(alpha = 0.9f))
                 .clickable(onClick = onDismiss),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Home", modifier = Modifier.clickable {
-                    onMenuItemClicked()
+                Text("Menu",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.height(10.dp))
+                /*Text("Locations", modifier = Modifier.clickable {
+                    navController.navigate(Screens.LIST_LOCATIONS.route)
                     onDismiss()
                 })
                 Spacer(modifier = Modifier.height(10.dp))
-                /*Text("Destinations", modifier = Modifier.clickable {
+                Text("Points of Interest", modifier = Modifier.clickable {
+                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                    onDismiss()
+                })
+                Spacer(modifier = Modifier.height(10.dp))
+                Text("Destinations", modifier = Modifier.clickable {
                     onMenuItemClicked()
                     onDismiss()
                 },
                 )
                  */
+                Button(onClick = {navController.navigate(Screens.MAIN.route)}) {
+                    Text("Home - Mapa")
+                }
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(onClick = {navController.navigate(Screens.LIST_LOCATIONS.route)}) {
                     Text("Locais")
-
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(onClick = {navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)}) {
+                    Text("Pontos de Interesse")
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(onClick = {navController.navigate(Screens.REGISTER_CATEGORY.route)}) {
+                    Text("Categorias")
                 }
                 // More menu items...
             }

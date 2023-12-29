@@ -1,5 +1,6 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
+import android.annotation.SuppressLint
 import android.location.Location
 
 import androidx.lifecycle.LiveData
@@ -78,7 +79,8 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
    }
 
     //var lista = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
-      fun getLocations() : ArrayList<pt.isec.amov.tp.eguide.data.Location>
+    @SuppressLint("SuspiciousIndentation")
+    fun getLocations() : ArrayList<pt.isec.amov.tp.eguide.data.Location>
     {
         var listaToReturn = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
 

@@ -1,5 +1,6 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -109,8 +110,10 @@ class AuthViewModel : ViewModel() {
         _error.value = null
     }
 
-    fun isUserAuthenticated() : Boolean {
-        return FAuthUtil.currentUser != null
+    fun isUserAuthenticated(): Boolean {
+        val isAuthenticated = FAuthUtil.currentUser != null
+        Log.d("AuthViewModel", "isUserAuthenticated: $isAuthenticated")
+        return isAuthenticated
     }
 
     private fun updateAuthenticationStatus() {

@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
@@ -152,21 +153,18 @@ fun InitializationView( viewModel: AuthViewModel, navController: NavHostControll
         modifier = Modifier.fillMaxSize(), // Fills the parent composable
         contentAlignment = Alignment.Center // Centers the content inside the Box
     ) {
-        // CircularProgressIndicator now correctly inside a Box
         CircularProgressIndicator()
-
-        LaunchedEffect(key1 = Unit) {
+        LaunchedEffect(Unit) {
             // Perform initialization tasks
+            delay(2000);
             // Example: Check if user is authenticated
             if (viewModel.isUserAuthenticated()) {
-                // Navigate to the main screen for authenticated users
-                navController.navigate("layout_bars") {
-                    popUpTo("initialization") { inclusive = true }
+                navController.navigate(Screens.MAIN.route) {
+                    popUpTo(Screens.Initialization.route) { inclusive = true }
                 }
             } else {
-                // Navigate to the login screen for unauthenticated users
                 navController.navigate(Screens.Login.route) {
-                    popUpTo("initialization") { inclusive = true }
+                    popUpTo(Screens.Initialization.route) { inclusive = true }
                 }
             }
         }

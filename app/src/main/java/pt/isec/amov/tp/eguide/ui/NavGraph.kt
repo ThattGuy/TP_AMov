@@ -26,17 +26,11 @@ fun SetupNavGraph(navController: NavHostController,
 
     NavHost(
         navController = navController,
-        startDestination = "initialization"
+        startDestination = Screens.Initialization.route
 
     ) {
-        composable("initialization"){
-            InitializationView(authViewModel, navController)
-        }
-
-        composable("layout_bars"){
-            Layout_Bars(viewModel = authViewModel, navController = navController) {
-                navController.navigate(Screens.LAYOUT_BARS.route)
-            }
+        composable(Screens.Initialization.route){
+            InitializationView(viewModel = authViewModel, navController = navController)
         }
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
@@ -49,17 +43,25 @@ fun SetupNavGraph(navController: NavHostController,
             }
         }
         composable(Screens.MAIN.route) {
-            MainScreen(viewModel = locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                MainScreen(viewModel = locationViewModel)
+            }
         }
         composable(Screens.LIST_LOCATIONS.route){
             //ListLocations(viewModel = locationViewModel, navController = navController)
-            ListLocations(viewModel = locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                ListLocations(viewModel = locationViewModel)
+            }
         }
         composable(Screens.REGISTER_LOCATION.route){
-            CreateLocationScreen(locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                CreateLocationScreen(locationViewModel)
+            }
         }
         composable(Screens.REGISTER_CATEGORY.route){
-            RegisterCategory(locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                RegisterCategory(locationViewModel)
+            }
         }
     }
 }

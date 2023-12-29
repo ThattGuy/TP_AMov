@@ -25,7 +25,7 @@ fun LocationItem(location: Location) {
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = { /*TODO*/ }) {
             Text(text = location.name ?: "Nome não disponível")
-            Text(text = location.address ?: "Endereço não disponível")
+            //Text(text = location.address ?: "Endereço não disponível")
         }
 
 
@@ -35,9 +35,9 @@ fun LocationItem(location: Location) {
 @Composable
  fun ListLocations(viewModel: LocationViewModel) {
 
-       var lista = ArrayList<Location>()
+       var lista = viewModel.getLocations()
 
-        viewModel.getLocations(lista)
+
    /* for(i in 1..100)
     {
         listaTetse.add(Location(

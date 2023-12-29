@@ -74,18 +74,33 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
 
    }
 
-    var lista = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
-      fun getLocations(lista : ArrayList<pt.isec.amov.tp.eguide.data.Location>)
+    //var lista = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
+      fun getLocations() : ArrayList<pt.isec.amov.tp.eguide.data.Location>
     {
+        var listaToReturn = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
 
 
-            FStorageUtil.provideLocations(lista)
+            runBlocking {
+                //FStorageUtil.fetchLocations {locations ->  listaToReturn = locations }
+                listaToReturn = FStorageUtil.provideLocations()
+            }
+
+
+
+
+        return listaToReturn
+
             // Faça algo com a lista de locais
 
         //Thread.sleep(2000)
         //return lista
 
     }
+
+
+
+
+
 
     private fun extrairString(str: String): String? {
         val regex = Regex("fused\\s(.*?)\\shAcc")

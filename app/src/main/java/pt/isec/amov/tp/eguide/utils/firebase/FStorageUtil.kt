@@ -6,6 +6,7 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import pt.isec.amov.tp.eguide.data.Location
 
 class FStorageUtil {
@@ -73,29 +74,84 @@ class FStorageUtil {
                 }
         }
 
-        fun provideLocations(lista: ArrayList<Location>){
+        /*fun provideLocations() : ArrayList<Location>{
 
 
             val db = Firebase.firestore
-            //val lista = ArrayList<Location>()
+            val lista = ArrayList<Location>()
            val location = db.collection("Locations").get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
                         val location = Location(document.id,document.data["Description"].toString(),document.data["Coordinates"].toString())
                         lista.add(location)
                     }
+                    return@addOnSuccessListener lista
 
                 }
                 .addOnFailureListener { exception ->
 
                 Log.d(ContentValues.TAG, "\n\n\nError getting documents: ", exception)
+
                 }
-
-
-
-
+//retiurn lista
+            return lista
 
         }
+
+         */
+
+
+         suspend fun provideLocations(): ArrayList<Location> {
+            return try {
+                val db = Firebase.firestore
+                val lista = ArrayList<Location>()
+
+                val querySnapshot = db.collection("Locations").get().await()
+                for (document in querySnapshot.documents) {
+                    val location = Location(
+                        document.id,
+                        document.data?.get("Description").toString(),
+                        document.data?.get("Coordinates").toString()
+                        //document.data["Coordinates"].toString()
+                    )
+                    lista.add(location)
+                }
+
+                lista
+            } catch (e: Exception) {
+                Log.d(ContentValues.TAG, "Error getting documents: ", e)
+                ArrayList()
+            }
+        }
+
+
+
+
+
+        fun fetchLocations(callback: (ArrayList<Location>) -> Unit) {
+            val db = Firebase.firestore
+
+            db.collection("Locations").get()
+                .addOnSuccessListener { result ->
+                    val lista = ArrayList<Location>()
+
+                    for (document in result) {
+                        val location = Location(
+                            document.id,
+                            document.data["Description"].toString(),
+                            document.data["Coordinates"].toString()
+                        )
+                        lista.add(location)
+                    }
+
+                    callback(lista) // Chamando o callback com a lista de locais
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(ContentValues.TAG, "Error getting documents: ", exception)
+                    callback(ArrayList()) // Em caso de falha, chamando o callback com uma lista vazia
+                }
+        }
+
 
 
         /*

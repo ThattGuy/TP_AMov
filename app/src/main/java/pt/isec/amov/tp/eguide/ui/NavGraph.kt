@@ -12,19 +12,26 @@ import pt.isec.amov.tp.eguide.ui.screens.RegisterCategory
 import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
+import pt.isec.amov.tp.eguide.ui.screens.uicomponents.InitializationView
+import pt.isec.amov.tp.eguide.ui.screens.uicomponents.Layout_Bars
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 
 
 @Composable
-fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel, locationViewModel: LocationViewModel) {
+fun SetupNavGraph(navController: NavHostController,
+                  authViewModel: AuthViewModel,
+                  locationViewModel: LocationViewModel) {
+
     NavHost(
         navController = navController,
-        //startDestination = Screens.Login.route
-        //startDestination = Screens.REGISTER_CATEGORY.route
-        startDestination = Screens.LIST_LOCATIONS.route
+        startDestination = Screens.Initialization.route
+
     ) {
+        composable(Screens.Initialization.route){
+            InitializationView(viewModel = authViewModel, navController = navController)
+        }
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){
                 navController.navigate(Screens.MAIN.route)
@@ -36,17 +43,25 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
             }
         }
         composable(Screens.MAIN.route) {
-            MainScreen(viewModel = locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                MainScreen(viewModel = locationViewModel)
+            }
         }
         composable(Screens.LIST_LOCATIONS.route){
             //ListLocations(viewModel = locationViewModel, navController = navController)
-            ListLocations(viewModel = locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                ListLocations(viewModel = locationViewModel)
+            }
         }
         composable(Screens.REGISTER_LOCATION.route){
-            CreateLocationScreen(locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                CreateLocationScreen(locationViewModel)
+            }
         }
         composable(Screens.REGISTER_CATEGORY.route){
-            RegisterCategory(locationViewModel)
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                RegisterCategory(locationViewModel)
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pt.isec.amov.tp.eguide.data.Location
 import pt.isec.amov.tp.eguide.data.PointOfInterest
-import pt.isec.amov.tp.eguide.ui.screens.uicomponents.TopBar
+import pt.isec.amov.tp.eguide.ui.screens.uicomponents.Layout_Bars
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 
@@ -39,7 +39,6 @@ fun ListPointsOfInterest(modifier: Modifier = Modifier, viewModel: LocationViewM
         listaTetse.add(PointOfInterest("${i}º Point"))
     }
 
-    TopBar()
     LazyColumn(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         items(listaTetse) { pointOfIterest ->
             PointOfInterestItem(pointOfInterest = pointOfIterest)

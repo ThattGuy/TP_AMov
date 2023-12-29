@@ -1,9 +1,13 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import pt.isec.amov.tp.eguide.utils.firebase.FAuthUtil
@@ -26,6 +30,16 @@ class AuthViewModel : ViewModel() {
     private val _error = mutableStateOf<String?>(null)
     val error: MutableState<String?>
         get() = _error
+
+    // LiveData for authentication status
+    private val _isAuthenticated = MutableLiveData<Boolean>()
+    val isAuthenticated: LiveData<Boolean>
+        get() = _isAuthenticated
+
+    init {
+        // Initialize the LiveData based on the current user
+        _isAuthenticated.value = FAuthUtil.currentUser != null
+    }
 
     fun createUserWithEmail(name: String, username: String, email: String, password: String, cpassword: String) {
         if (name.isBlank() ||
@@ -94,5 +108,15 @@ class AuthViewModel : ViewModel() {
         FAuthUtil.signOut()
         _user.value = null
         _error.value = null
+    }
+
+    fun isUserAuthenticated(): Boolean {
+        val isAuthenticated = FAuthUtil.currentUser != null
+        Log.d("AuthViewModel", "isUserAuthenticated: $isAuthenticated")
+        return isAuthenticated
+    }
+
+    private fun updateAuthenticationStatus() {
+        _isAuthenticated.value = FAuthUtil.currentUser != null
     }
 }

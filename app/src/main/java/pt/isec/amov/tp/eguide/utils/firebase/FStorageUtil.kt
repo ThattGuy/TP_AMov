@@ -1,18 +1,12 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
 import android.content.ContentValues
-import android.content.res.AssetManager
 import android.util.Log
-import com.google.android.gms.location.LocationServices
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import java.io.IOException
-import java.io.InputStream
+import pt.isec.amov.tp.eguide.data.Location
 
 class FStorageUtil {
     companion object {
@@ -77,6 +71,30 @@ class FStorageUtil {
                 .addOnFailureListener { e->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
+        }
+
+        fun provideLocations(lista: ArrayList<Location>){
+
+
+            val db = Firebase.firestore
+            //val lista = ArrayList<Location>()
+           val location = db.collection("Locations").get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val location = Location(document.id,document.data["Description"].toString(),document.data["Coordinates"].toString())
+                        lista.add(location)
+                    }
+
+                }
+                .addOnFailureListener { exception ->
+
+                Log.d(ContentValues.TAG, "\n\n\nError getting documents: ", exception)
+                }
+
+
+
+
+
         }
 
 

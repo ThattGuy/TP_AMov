@@ -1,5 +1,5 @@
 package pt.isec.amov.tp.eguide.data
 
-data class Location(val name: String?, val address: String?){
+data class Location(val name: String?, val address: String?, val toString: String){
 
 }

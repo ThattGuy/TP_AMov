@@ -23,6 +23,8 @@ data class Coordinates(val team:String, val latitude :Double, val longitude:Doub
 
 class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel(){
 
+    var locationSelected : pt.isec.amov.tp.eguide.data.Location? = null // Location selecionado na lista de locais
+
     val isLogged = MutableLiveData(false)
     val POIs=listOf(
         Coordinates("Liverpool",53.430819,-2.960828)
@@ -102,11 +104,20 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
 
 
 
-    private fun extrairString(str: String): String? {
+     fun extrairString(str: String): String? {
         val regex = Regex("fused\\s(.*?)\\shAcc")
         val matchResult = regex.find(str)
 
         return matchResult?.groups?.get(1)?.value
+    }
+
+    fun insertPointOfInterest(
+        name: String,
+        description: String,
+        coordinates: String
+    ) {
+
+        FStorageUtil.insertPointOfInterest(name,description,coordinates,this.locationSelected)
     }
 
 }

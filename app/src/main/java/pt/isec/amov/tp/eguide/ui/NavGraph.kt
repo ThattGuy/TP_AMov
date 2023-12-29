@@ -23,7 +23,7 @@ fun SetupNavGraph(navController: NavHostController, authViewModel: AuthViewModel
         navController = navController,
         //startDestination = Screens.Login.route
         //startDestination = Screens.REGISTER_CATEGORY.route
-        startDestination = Screens.REGISTER_LOCATION.route
+        startDestination = Screens.LIST_LOCATIONS.route
     ) {
         composable(Screens.Login.route) {
             LoginScreen(viewModel = authViewModel, navController = navController){

@@ -1,15 +1,12 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
-import android.content.ContentValues
 import android.location.Location
-import android.util.Log
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.runBlocking
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
 
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
@@ -76,6 +73,19 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
        FStorageUtil.insertLocationIntoDB(name,description,location!!)
 
    }
+
+    var lista = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
+      fun getLocations(lista : ArrayList<pt.isec.amov.tp.eguide.data.Location>)
+    {
+
+
+            FStorageUtil.provideLocations(lista)
+            // Faça algo com a lista de locais
+
+        //Thread.sleep(2000)
+        //return lista
+
+    }
 
     private fun extrairString(str: String): String? {
         val regex = Regex("fused\\s(.*?)\\shAcc")

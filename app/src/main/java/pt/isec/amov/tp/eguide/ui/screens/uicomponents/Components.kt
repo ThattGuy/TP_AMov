@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -106,7 +107,7 @@ fun Layout_Bars(
             Box(modifier = Modifier.padding(innerPadding)) {
                 content(innerPadding)
 
-                OverlayMenu("Menu", showMenu, onDismiss = { showMenu = false }) {
+                OverlayMenu("Menu", showMenu, onDismiss = { showMenu = false },navController) {
                     // Logic for menu item click, e.g., navigate
                     navController.navigate("your_route_here")
                     }
@@ -119,7 +120,9 @@ fun OverlayMenu(
     title: String,
     showMenu: Boolean,
     onDismiss: () -> Unit,
-    onMenuItemClicked: () -> Unit
+    navController: NavHostController,
+    onMenuItemClicked: () -> Unit,
+
 ) {
     if (showMenu) {
         Box(
@@ -137,10 +140,16 @@ fun OverlayMenu(
                     onDismiss()
                 })
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("Destinations", modifier = Modifier.clickable {
+                /*Text("Destinations", modifier = Modifier.clickable {
                     onMenuItemClicked()
                     onDismiss()
-                })
+                },
+                )
+                 */
+                Button(onClick = {navController.navigate(Screens.LIST_LOCATIONS.route)}) {
+                    Text("Locais")
+
+                }
                 // More menu items...
             }
         }

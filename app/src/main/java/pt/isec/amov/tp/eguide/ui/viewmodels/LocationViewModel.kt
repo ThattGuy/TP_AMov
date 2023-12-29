@@ -88,8 +88,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
             }
 
 
-
-
         return listaToReturn
 
             // Faça algo com a lista de locais
@@ -98,10 +96,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         //return lista
 
     }
-
-
-
-
 
 
      fun extrairString(str: String): String? {

@@ -48,7 +48,10 @@ class FStorageUtil {
 
          fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
             val db = com.google.firebase.Firebase.firestore
-            val nameData = hashMapOf("Name" to categoryName, "Description" to categoryDescription)
+            val nameData = hashMapOf("Name" to categoryName,
+                                     "Description" to categoryDescription,
+                                      "CreatedBy" to FAuthUtil.currentUser?.uid,
+                                      "IsApproved" to false)
 
 
             db.collection("Categories").document(categoryName).set(nameData)
@@ -263,7 +266,9 @@ class FStorageUtil {
                 for (document in querySnapshot.documents) {
                     val category = Category(
                         document.id,
-                        document.data?.get("Description").toString()
+                        document.data?.get("Description").toString(),
+                        document.data?.get("CreatedBy").toString(),
+                        document.data?.get("IsApproved") as Boolean
                     )
 
                     lista.add(category)
@@ -370,6 +375,53 @@ class FStorageUtil {
             {
                 listToReturn.add(user.id)
             }
+            return listToReturn
+        }
+
+       suspend fun userApprovesCategory(category: Category, userId: String) {
+            val db = Firebase.firestore
+            val data = hashMapOf(
+                "UserId" to userId
+            )
+            var auxList = ArrayList<String>()
+
+            db.collection("Categories").document(category.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e ->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+            //recolher lista de ApprovedByUsers
+
+            val querySnapshot = db.collection("Categories").document(category.name.toString()).collection("ApprovedByUsers").get().await()
+
+            for(user in querySnapshot.documents)
+            {
+                auxList.add(user.id)
+            }
+            if(auxList.size >= 2)
+            {
+                db.collection("Categories").document(category.name.toString()).update("IsApproved",true)
+                    .addOnSuccessListener {
+                        Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                    }
+            }
+        }
+
+        suspend fun getApprovalsOfCategory(category: Category): java.util.ArrayList<String> {
+            val db = Firebase.firestore
+            val listToReturn = ArrayList<String>()
+            val querySnapshot = db.collection("Categories").document(category.name.toString())
+                .collection("ApprovedByUsers").get().await()
+                    for (document in querySnapshot.documents) {
+                        listToReturn.add(document.id)
+
+                }
+
             return listToReturn
         }
 

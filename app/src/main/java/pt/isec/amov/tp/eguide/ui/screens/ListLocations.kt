@@ -27,6 +27,8 @@ import pt.isec.amov.tp.eguide.utils.firebase.FAuthUtil
 
 @Composable
 fun LocationItem(location: Location,viewModel: LocationViewModel,navController: NavController) {
+    val listOfApprovals = viewModel.getApprovalsOfLocation(location)
+    var userId = FAuthUtil.currentUser?.uid.toString()
     Column(modifier = Modifier.padding(16.dp)) {
         Row {
 
@@ -38,7 +40,7 @@ fun LocationItem(location: Location,viewModel: LocationViewModel,navController: 
                 Text(text = location.name ?: "Nome não disponível")
                 //Text(text = location.address ?: "Endereço não disponível")
             }
-            if(FAuthUtil.currentUser?.uid != location.createdBy && location.isApproved == false)
+            if(userId != location.createdBy && location.isApproved == false && !listOfApprovals.contains(userId))
             {
                 Button(onClick = {
                  viewModel.userApprovesLocation(location, FAuthUtil.currentUser?.uid.toString())

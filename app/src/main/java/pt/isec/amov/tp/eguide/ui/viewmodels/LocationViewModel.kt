@@ -27,7 +27,6 @@ data class Coordinates(val team:String, val latitude :Double, val longitude:Doub
 class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel(){
 
     var locationSelected : pt.isec.amov.tp.eguide.data.Location? = null // Location selecionado na lista de locais
-
     val isLogged = MutableLiveData(false)
     val POIs=listOf(
         Coordinates("Liverpool",53.430819,-2.960828)
@@ -139,5 +138,14 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
             FStorageUtil.userApprovesLocation(location, userId)
         }
     }
+
+    fun getApprovalsOfLocation(location: pt.isec.amov.tp.eguide.data.Location): ArrayList<String>{
+        var toReturn = ArrayList<String>()
+        runBlocking {
+            toReturn = FStorageUtil.getApprovalsOfLocation(location)
+        }
+        return toReturn
+    }
+
 
 }

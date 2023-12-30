@@ -251,8 +251,22 @@ class FStorageUtil {
             }
         }
 
-       suspend fun userApprovesLocation(location: Location, userId: String) {
+
+        suspend fun getApprovalsOfLocation(location: Location): ArrayList<String> {
             val db = Firebase.firestore
+            var listToReturn = ArrayList<String>()
+            val querySnapshot = db.collection("Locations").document(location.name.toString())
+                .collection("ApprovedByUsers").get().await()
+
+            for(user in querySnapshot.documents)
+            {
+                listToReturn.add(user.id)
+            }
+            return listToReturn
+        }
+       suspend fun userApprovesLocation(location: Location, userId: String)  {
+            val db = Firebase.firestore
+           var listToReturn = ArrayList<String>()
             val data = hashMapOf(
                 "UserId" to userId
             )
@@ -269,8 +283,12 @@ class FStorageUtil {
             val querySnapshot = db.collection("Locations").document(location.name.toString())
                 .collection("ApprovedByUsers").get().await()
 
-           if(querySnapshot.documents.size >= 3)
-
+           for(user in querySnapshot.documents)
+           {
+               listToReturn.add(user.id)
+           }
+           //if(querySnapshot.documents.size >= 4)
+           if(listToReturn.size >= 3)
                     {
                         db.collection("Locations").document(location.name.toString()).update("IsApproved",true)
                             .addOnSuccessListener {
@@ -280,6 +298,7 @@ class FStorageUtil {
                                 Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                             }
                     }
+
                 }
 
 

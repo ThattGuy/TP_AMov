@@ -9,6 +9,7 @@ enum class Screens(display: String) {
     REGISTER_LOCATION("RegisterLocation"),
     REGISTER_CATEGORY("RegisterCategory"),
     LIST_POINTS_OF_INTEREST("ListPointsOfInterest"),
+    LIST_CATEGORIES("ListCategories"),
     REGISTER_POINT_OF_INTEREST("RegisterPointOfInterest");
 
     val route : String

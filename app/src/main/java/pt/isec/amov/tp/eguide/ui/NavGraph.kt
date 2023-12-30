@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pt.isec.amov.tp.eguide.ui.screens.CreateLocationScreen
+import pt.isec.amov.tp.eguide.ui.screens.ListCategories
 import pt.isec.amov.tp.eguide.ui.screens.ListLocations
 import pt.isec.amov.tp.eguide.ui.screens.ListPointsOfInterest
 import pt.isec.amov.tp.eguide.ui.screens.MainScreen
@@ -74,6 +75,11 @@ fun SetupNavGraph(navController: NavHostController,
         composable(Screens.LIST_POINTS_OF_INTEREST.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 ListPointsOfInterest(viewModel = locationViewModel, navController = navController)
+            }
+        }
+        composable(Screens.LIST_CATEGORIES.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                ListCategories(viewModel = locationViewModel, navController = navController)
             }
         }
     }

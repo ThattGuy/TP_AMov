@@ -182,7 +182,7 @@ fun OverlayMenu(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Button(onClick = {navController.navigate(Screens.REGISTER_CATEGORY.route){ restoreState = true }},
+                Button(onClick = {navController.navigate(Screens.LIST_CATEGORIES.route){ restoreState = true }},
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {

@@ -7,6 +7,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.Location
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 
@@ -168,6 +169,7 @@ class FStorageUtil {
             coordinates: String,
             locationSelected: Location?
         ) {
+
             val db = Firebase.firestore
             val data = hashMapOf(
                 "Description" to description,
@@ -201,6 +203,28 @@ class FStorageUtil {
                     )
 
                     lista.add(pointOfInterest)
+                }
+
+                lista
+            } catch (e: Exception) {
+                Log.d(ContentValues.TAG, "Error getting documents: ", e)
+                ArrayList()
+            }
+        }
+
+       suspend fun provideCategories() :ArrayList<Category> {
+            return try{
+                val db = Firebase.firestore
+                val lista = ArrayList<Category>()
+
+                val querySnapshot = db.collection("Categories").get().await()
+                for (document in querySnapshot.documents) {
+                    val category = Category(
+                        document.id,
+                        document.data?.get("Description").toString()
+                    )
+
+                    lista.add(category)
                 }
 
                 lista

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
 
@@ -124,6 +125,14 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
             listaToReturn = FStorageUtil.providePointsOfInterest(locationSelected?.name)
         }
         return listaToReturn
+    }
+
+    fun getCategoriesList(): ArrayList<Category> {
+        var listToReturn = ArrayList<Category>()
+        runBlocking {
+           listToReturn = FStorageUtil.provideCategories()
+        }
+        return listToReturn
     }
 
 }

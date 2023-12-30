@@ -2,7 +2,6 @@ package pt.isec.amov.tp.eguide.utils.firebase
 
 import android.content.ContentValues
 import android.util.Log
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -72,7 +71,14 @@ class FStorageUtil {
                                 "IsApproved" to false
                 )
 
-            val irrelevantData = hashMapOf("Nothing here" to "Nothing here")
+            //val irrelevantData = hashMapOf("Nothing here" to "Nothing here")
+            val irrelevantData = hashMapOf(
+                "Description" to description,
+                "Coordinates" to "coordinates",
+                "Location" to "location",
+                "CreatedBy" to FAuthUtil.currentUser?.uid,
+                "IsApproved" to false
+            )
             //Inserir um local
             db.collection("Locations").document(name).set(data)
                 .addOnSuccessListener {
@@ -191,17 +197,34 @@ class FStorageUtil {
             val data = hashMapOf(
                 "Description" to description,
                 "Coordinates" to coordinates,
-                "Location" to locationSelected?.name
+                "Location" to locationSelected?.name,
+                "CreatedBy" to FAuthUtil.currentUser?.uid,
+                "IsApproved" to false
             )
 
+            val irrelevantData = hashMapOf("Creator" to FAuthUtil.currentUser?.uid.toString())
 
-            db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest").document(name).set(data)
+
+            db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
+                .document(name).set(data)
                 .addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
                 }
                 .addOnFailureListener { e ->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
+
+            db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
+                .document(name).collection("ApprovedByUsers")
+                .document(FAuthUtil.currentUser?.uid.toString()).set(irrelevantData)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e ->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+
+
         }
 
         suspend fun providePointsOfInterest(name: String?): java.util.ArrayList<PointOfInterest> {
@@ -216,7 +239,9 @@ class FStorageUtil {
                         document.id,
                         document.data?.get("Description").toString(),
                         document.data?.get("Location").toString(),
-                        document.data?.get("Coordinates").toString()
+                        document.data?.get("Coordinates").toString(),
+                        document.data?.get("CreatedBy").toString(),
+                        document.data?.get("IsApproved") as Boolean
                     )
 
                     lista.add(pointOfInterest)
@@ -266,7 +291,7 @@ class FStorageUtil {
         }
        suspend fun userApprovesLocation(location: Location, userId: String)  {
             val db = Firebase.firestore
-           var listToReturn = ArrayList<String>()
+           var auxList = ArrayList<String>()
             val data = hashMapOf(
                 "UserId" to userId
             )
@@ -285,10 +310,10 @@ class FStorageUtil {
 
            for(user in querySnapshot.documents)
            {
-               listToReturn.add(user.id)
+               auxList.add(user.id)
            }
            //if(querySnapshot.documents.size >= 4)
-           if(listToReturn.size >= 3)
+           if(auxList.size >= 3)
                     {
                         db.collection("Locations").document(location.name.toString()).update("IsApproved",true)
                             .addOnSuccessListener {
@@ -301,6 +326,52 @@ class FStorageUtil {
 
                 }
 
+        suspend fun userApprovesPointOfInterest(pointOfInterest: PointOfInterest, userId: String) {
+            val db = Firebase.firestore
+            val data = hashMapOf(
+                "UserId" to userId
+            )
+            var auxList = ArrayList<String>()
+
+            db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e ->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+            //recolher lista de ApprovedByUsers
+
+            val querySnapshot = db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).collection("ApprovedByUsers").get().await()
+
+            for(user in querySnapshot.documents)
+            {
+                auxList.add(user.id)
+            }
+            if(auxList.size >= 3)
+            {
+                db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).update("IsApproved",true)
+                    .addOnSuccessListener {
+                        Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                    }
+            }
+        }
+
+        suspend fun getApprovalsOfPointOfInterest(pointOfInterest: PointOfInterest): ArrayList<String> {
+            val db = Firebase.firestore
+            val listToReturn = ArrayList<String>()
+            val querySnapshot = db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString())
+                .collection("ApprovedByUsers").get().await()
+
+            for(user in querySnapshot.documents)
+            {
+                listToReturn.add(user.id)
+            }
+            return listToReturn
+        }
 
 
         /*

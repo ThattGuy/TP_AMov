@@ -147,5 +147,19 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         return toReturn
     }
 
+    fun userApprovesPointOfInterest(pointOfInterest: PointOfInterest, userId: String) {
+        runBlocking {
+            FStorageUtil.userApprovesPointOfInterest(pointOfInterest, userId)
+        }
+    }
+
+    fun getApprovalsOfPointOfInterest(pointOfInterest: PointOfInterest): ArrayList<String> {
+        var toReturn = ArrayList<String>()
+        runBlocking {
+            toReturn = FStorageUtil.getApprovalsOfPointOfInterest(pointOfInterest)
+        }
+        return toReturn
+    }
+
 
 }

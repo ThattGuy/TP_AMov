@@ -44,8 +44,8 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 @Composable
 //onLogin: (String, String) -> Unit
 fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navController: NavController, onSuccess: () -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember {viewModel.email }
+    var password by  remember { viewModel.password }
     val error by remember {viewModel.error}
     val user by remember {viewModel.user}
     val context = LocalContext.current
@@ -71,14 +71,7 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        /*Text(text = "Explores Guide",
-            style = TextStyle(
-            fontSize = 18.sp,
-        fontWeight = FontWeight.Medium,
-        letterSpacing = 0.5.sp
-        ))
 
-     */
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo da empresa",

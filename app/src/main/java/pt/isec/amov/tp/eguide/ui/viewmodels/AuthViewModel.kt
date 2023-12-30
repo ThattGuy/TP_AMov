@@ -24,6 +24,12 @@ fun FirebaseUser.toUser() : User {
 class AuthViewModel : ViewModel() {
 
     private val _user = mutableStateOf(FAuthUtil.currentUser?.toUser())
+
+    val email = mutableStateOf("")
+    val password = mutableStateOf("")
+    val cpassword = mutableStateOf("")
+    val name = mutableStateOf("")
+    val username = mutableStateOf("")
     val user: MutableState<User?>
         get() = _user
 

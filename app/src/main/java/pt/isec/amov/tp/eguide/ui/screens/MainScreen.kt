@@ -60,12 +60,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
     //val context = LocalContext.current
 
-
-
-
     var autoEnabled by remember { mutableStateOf(false) }
-
-
 
     val location = viewModel.currentLocation.observeAsState()
 

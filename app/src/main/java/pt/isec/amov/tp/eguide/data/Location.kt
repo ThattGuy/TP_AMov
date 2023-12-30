@@ -1,5 +1,9 @@
 package pt.isec.amov.tp.eguide.data
 
-data class Location(val name: String?, val address: String?, val toString: String){
+data class Location(var name: String?,
+                   // var address: String?,
+                    var coordinates: String,
+                    val createdBy : String?,
+                    var isApproved : Boolean? = false) {
 
 }

@@ -135,4 +135,10 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         return listToReturn
     }
 
+    fun userApprovesLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String) {
+        runBlocking {
+            FStorageUtil.userApprovesLocation(location, userId)
+        }
+    }
+
 }

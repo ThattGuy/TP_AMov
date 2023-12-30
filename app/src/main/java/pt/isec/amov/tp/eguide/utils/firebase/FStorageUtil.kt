@@ -65,9 +65,15 @@ class FStorageUtil {
         fun insertLocationIntoDB(name: String,description: String, locationCoordinates : String)
         {
             val db = Firebase.firestore
+            val userId = FAuthUtil.currentUser?.uid
             val data = hashMapOf("Description" to description,
-                                "Coordinates" to locationCoordinates)
+                                "Coordinates" to locationCoordinates,
+                                "CreatedBy" to userId,
+                                "IsApproved" to false
+                )
 
+            val irrelevantData = hashMapOf("Nothing here" to "Nothing here")
+            //Inserir um local
             db.collection("Locations").document(name).set(data)
                 .addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
@@ -75,7 +81,16 @@ class FStorageUtil {
                 .addOnFailureListener { e->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
-            db.collection("Locations").document(name).collection("PointsOfInterest").document("ReferencePoint").set(data)
+            //Inserir uma colecao "utilizadors que aprovaram o local"
+            db.collection("Locations").document(name).collection("ApprovedByUsers").document(userId.toString()).set(irrelevantData)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+            //Inserir uma colecao Pontos de interesse do local
+            db.collection("Locations").document(name).collection("PointsOfInterest").document("ReferencePoint").set(irrelevantData)
                 .addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
                 }
@@ -120,8 +135,10 @@ class FStorageUtil {
                 for (document in querySnapshot.documents) {
                     val location = Location(
                         document.id,
-                        document.data?.get("Description").toString(),
-                        document.data?.get("Coordinates").toString()
+                        //document.data?.get("Description").toString(),
+                        document.data?.get("Coordinates").toString(),
+                        document.data?.get("CreatedBy").toString(),
+                        document.data?.get("IsApproved") as Boolean
                         //document.data["Coordinates"].toString()
                     )
                     lista.add(location)
@@ -233,6 +250,38 @@ class FStorageUtil {
                 ArrayList()
             }
         }
+
+       suspend fun userApprovesLocation(location: Location, userId: String) {
+            val db = Firebase.firestore
+            val data = hashMapOf(
+                "UserId" to userId
+            )
+
+            db.collection("Locations").document(location.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
+                .addOnSuccessListener {
+                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                }
+                .addOnFailureListener { e ->
+                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                }
+            //recolher lista de ApprovedByUsers
+
+            val querySnapshot = db.collection("Locations").document(location.name.toString())
+                .collection("ApprovedByUsers").get().await()
+
+           if(querySnapshot.documents.size >= 3)
+
+                    {
+                        db.collection("Locations").document(location.name.toString()).update("IsApproved",true)
+                            .addOnSuccessListener {
+                                Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                            }
+                    }
+                }
+
 
 
         /*

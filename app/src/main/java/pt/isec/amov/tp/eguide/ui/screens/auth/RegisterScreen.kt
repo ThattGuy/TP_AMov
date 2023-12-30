@@ -46,13 +46,13 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuccess: () -> Unit) {
-    var name = remember { mutableStateOf("") }
-    var username = remember { mutableStateOf("") }
-    val email = remember {mutableStateOf("")}
-    var password = remember { mutableStateOf("") }
-    var cpassword = remember { mutableStateOf("") }
-    val error by remember {viewModel.error}
-    val user by remember {viewModel.user}
+    var name by remember { viewModel.name }
+    var username by remember { viewModel.username }
+    var email by remember {viewModel.email }
+    var password by  remember { viewModel.password }
+    var cpassword by remember { viewModel.cpassword }
+    val error by remember {viewModel.error }
+    val user by remember {viewModel.user }
 
     LaunchedEffect(key1 = user) {
         if (user !=null && error == null)
@@ -73,44 +73,44 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = name.value,
-            onValueChange = { name.value = it },
+            value = name,
+            onValueChange = { name = it },
             label = { Text("Name") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = username.value,
-            onValueChange = { username.value = it },
+            value = username,
+            onValueChange = { username = it },
             label = { Text("Username") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = email.value,
-            onValueChange = { email.value = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
-                autoCorrect = true, // Enable auto-correction
+                autoCorrect = true,
                 capitalization = KeyboardCapitalization.None
             ),
-            keyboardActions = KeyboardActions(
+            /*keyboardActions = KeyboardActions(
                 onDone = { /* Define action on Done key press */ }
-            )
+            )*/
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = password.value,
-            onValueChange = { password.value = it },
+            value = password,
+            onValueChange = { password = it },
             label = { Text("New Password") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = cpassword.value,
-            onValueChange = { cpassword.value = it },
+            value = cpassword,
+            onValueChange = { cpassword = it },
             label = { Text("Confirm New Password") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -123,11 +123,11 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
         ) {
             Button(onClick = {
                 viewModel.createUserWithEmail(
-                    name.value,
-                    username.value,
-                    email.value,
-                    password.value,
-                    cpassword.value
+                    name,
+                    username,
+                    email,
+                    password,
+                    cpassword
                 )
             }) {
                 Text("Register")

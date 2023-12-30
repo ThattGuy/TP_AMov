@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pt.isec.amov.tp.eguide.data.Location
 import pt.isec.amov.tp.eguide.data.PointOfInterest
-import pt.isec.amov.tp.eguide.ui.screens.uicomponents.Layout_Bars
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 

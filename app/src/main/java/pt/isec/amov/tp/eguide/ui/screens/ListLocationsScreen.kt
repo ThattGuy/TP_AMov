@@ -1,8 +1,6 @@
 package pt.isec.amov.tp.eguide.ui.screens
 
 
-import android.content.ContentValues
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import pt.isec.amov.tp.eguide.data.Location
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
@@ -75,7 +72,6 @@ if(lista.size == 0)
     Button(onClick = { navController.navigate(Screens.REGISTER_LOCATION.route) }) {
         Text(text = "Registar local")
     }
-
     LazyColumn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

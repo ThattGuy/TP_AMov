@@ -1,6 +1,5 @@
 package pt.isec.amov.tp.eguide.ui
 
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,12 +13,12 @@ import pt.isec.amov.tp.eguide.ui.screens.RegisterCategory
 import pt.isec.amov.tp.eguide.ui.screens.RegisterPointOfInterest
 import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
 import pt.isec.amov.tp.eguide.ui.screens.Screens
+import pt.isec.amov.tp.eguide.ui.screens.auth.EditUserInfoScreen
 import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
 import pt.isec.amov.tp.eguide.ui.screens.uicomponents.InitializationView
 import pt.isec.amov.tp.eguide.ui.screens.uicomponents.Layout_Bars
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
-import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModelFactory
 
 
 @Composable
@@ -80,6 +79,11 @@ fun SetupNavGraph(navController: NavHostController,
         composable(Screens.LIST_CATEGORIES.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 ListCategories(viewModel = locationViewModel, navController = navController)
+            }
+        }
+        composable(Screens.PROFILE.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                EditUserInfoScreen(viewModel = authViewModel, navController = navController)
             }
         }
     }

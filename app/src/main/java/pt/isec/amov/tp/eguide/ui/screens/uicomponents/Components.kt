@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -76,14 +77,14 @@ fun Layout_Bars(
                     }
 
                     if(isAuthenticated){
-                        IconButton(onClick = { /* Handle Profile */ }) {
+                        IconButton(onClick = { navController.navigate("profile") }) {
                             Icon(Icons.Filled.Person, contentDescription = "Profile")
                         }
                     }
                 }
             )
         },
-        bottomBar = {
+        /*bottomBar = {
             if(showBottomBar){
                 BottomAppBar(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -97,7 +98,7 @@ fun Layout_Bars(
                     )
                 }
             }
-        }
+        }*/
         ) {
             innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
@@ -156,7 +157,8 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text("Home - Mapa",
+                    Text(
+                        stringResource(id = pt.isec.amov.tp.eguide.R.string.home),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -166,7 +168,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text("Locais",
+                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.locations),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -176,7 +178,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text("Pontos de Interesse",
+                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.points_of_interest),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -186,7 +188,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text("Categorias",
+                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.categories),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }

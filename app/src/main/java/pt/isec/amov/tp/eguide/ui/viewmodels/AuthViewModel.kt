@@ -1,6 +1,7 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
@@ -126,5 +127,51 @@ class AuthViewModel : ViewModel() {
 
     private fun updateAuthenticationStatus() {
         _isAuthenticated.value = FAuthUtil.currentUser != null
+    }
+
+    fun updateUserInformation(name: String, username: String, email: String, password: String, cpassword: String) {
+        if (name.isBlank() || username.isBlank() || email.isBlank()) {
+            _error.value = "Please fill in all fields."
+            return
+        }
+
+        // Check if the passwords match
+        if (password.isNotBlank()) {
+            FAuthUtil.changeUserPassword(password) { exception ->
+                if (exception == null) {
+                    updateUserProfile(name, email)
+                } else {
+                    _error.value = exception.message
+                }
+            }
+        } else {
+            updateUserProfile(name, email)
+        }
+
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _error.value = "Invalid email format."
+            return
+        }
+
+        FAuthUtil.updateUserInformation(name, email) { exception ->
+            if (exception == null) {
+                _user.value = FAuthUtil.currentUser?.toUser()
+                _error.value = null
+            } else {
+                _error.value = exception.message
+            }
+        }
+    }
+
+    private fun updateUserProfile(name: String, email: String) {
+        FAuthUtil.updateUserInformation(name, email) { exception ->
+            if (exception == null) {
+                _user.value = FAuthUtil.currentUser?.toUser()
+                _error.value = null
+            } else {
+                _error.value = exception.message
+            }
+        }
     }
 }

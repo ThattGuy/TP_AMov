@@ -13,7 +13,7 @@ import pt.isec.amov.tp.eguide.data.PointOfInterest
 
 class FStorageUtil {
     companion object {
-        fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
+        /*fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
 
             val scores = hashMapOf(
@@ -26,7 +26,6 @@ class FStorageUtil {
                 }
         }
 
-        /*fun updateDataInFirestore(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val v = db.collection("Scores").document("Level1")
 

@@ -20,13 +20,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 @Composable
 fun RegisterCategory(viewModel: LocationViewModel){
-
-
-
-
-    val db = Firebase.firestore
-
-
+    //val db = Firebase.firestore
 
     Column(verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally) {

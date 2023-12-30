@@ -26,7 +26,7 @@ class FStorageUtil {
                 }
         }
 
-        fun updateDataInFirestore(onResult: (Throwable?) -> Unit) {
+        /*fun updateDataInFirestore(onResult: (Throwable?) -> Unit) {
             val db = Firebase.firestore
             val v = db.collection("Scores").document("Level1")
 
@@ -45,7 +45,7 @@ class FStorageUtil {
                 .addOnFailureListener { e ->
                     onResult(e)
                 }
-        }
+        }*/
 
          fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
             val db = com.google.firebase.Firebase.firestore

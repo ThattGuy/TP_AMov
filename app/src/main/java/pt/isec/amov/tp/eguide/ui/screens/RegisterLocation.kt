@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -29,11 +30,11 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 fun CreateLocationScreen(viewModel: LocationViewModel) {
 
 
-    var description by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("")}
+    var description by rememberSaveable { mutableStateOf("") }
+    var location by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("")}
     Column(
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

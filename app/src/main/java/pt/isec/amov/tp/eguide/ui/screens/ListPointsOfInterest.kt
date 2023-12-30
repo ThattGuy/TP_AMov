@@ -33,15 +33,30 @@ fun PointOfInterestItem(pointOfInterest: PointOfInterest) {
 
 @Composable
 fun ListPointsOfInterest(modifier: Modifier = Modifier, viewModel: LocationViewModel, navController: NavController) {
-    val listaTetse  = ArrayList<PointOfInterest>()
-    for(i in 1..100)
+    val listaTetse  = viewModel.getPointsOfInterest()
+   /* for(i in 1..100)
     {
         listaTetse.add(PointOfInterest("${i}º Point"))
     }
 
-    LazyColumn(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    */
+Column(
+    verticalArrangement = Arrangement.Top,
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
+
+
+    Button(onClick = { navController.navigate(Screens.REGISTER_POINT_OF_INTEREST.route) }) {
+        Text(text = "Registar ponto de interesse")
+    }
+    LazyColumn(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
         items(listaTetse) { pointOfIterest ->
             PointOfInterestItem(pointOfInterest = pointOfIterest)
         }
     }
+}
 }

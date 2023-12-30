@@ -66,7 +66,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
     }
 
     fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
-
        FStorageUtil.insertCategoryIntoDB(categoryName,categoryDescription)
     }
 

@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -74,20 +75,20 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
 
         Image(
             painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo da empresa",
-            modifier = Modifier.size(150.dp) // Ajuste o tamanho conforme necessário
+            contentDescription = stringResource(id = R.string.logo_description),
+            modifier = Modifier.size(150.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Username") }
+            label = { Text(stringResource(id = R.string.email)) }
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(id = R.string.password)) },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -100,7 +101,6 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
         }
 
         Button(onClick = {
-            print("\n\n\nvim aqui")
             val signInIntent = GoogleSignIn.getClient(
                 context,
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

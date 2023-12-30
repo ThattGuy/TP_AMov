@@ -10,15 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,11 +55,6 @@ fun Layout_Bars(
 ){
     var showMenu: Boolean by remember { mutableStateOf(false) }
     val isAuthenticated = viewModel.isUserAuthenticated()
-
-    fun navigateTo(route: String) {
-        showMenu = false
-        navController.navigate(route)
-    }
 
     Scaffold(
         topBar = {
@@ -109,8 +103,7 @@ fun Layout_Bars(
             Box(modifier = Modifier.padding(innerPadding)) {
                 content(innerPadding)
 
-                OverlayMenu("Menu", showMenu, onDismiss = { showMenu = false },navController) {
-                    // Logic for menu item click, e.g., navigate
+                OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
                     navController.navigate(Screens.MAIN.route)
                     navController.navigate(Screens.LIST_LOCATIONS.route)
                     navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
@@ -133,50 +126,69 @@ fun OverlayMenu(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Gray.copy(alpha = 0.9f))
+                .background(Color.White.copy(alpha = 0.8f))
                 .clickable(onClick = onDismiss),
-            contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.TopCenter,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Menu",
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    fontSize = 20.sp,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.height(10.dp))
-                /*Text("Locations", modifier = Modifier.clickable {
-                    navController.navigate(Screens.LIST_LOCATIONS.route)
-                    onDismiss()
-                })
-                Spacer(modifier = Modifier.height(10.dp))
-                Text("Points of Interest", modifier = Modifier.clickable {
-                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                    onDismiss()
-                })
-                Spacer(modifier = Modifier.height(10.dp))
-                Text("Destinations", modifier = Modifier.clickable {
-                    onMenuItemClicked()
-                    onDismiss()
-                },
+
+                val buttonModifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
+
+                val buttonColors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
-                 */
-                Button(onClick = {navController.navigate(Screens.MAIN.route)}) {
-                    Text("Home - Mapa")
+
+                Button(onClick = {navController.navigate(Screens.MAIN.route){ launchSingleTop = true }},
+                    modifier = buttonModifier,
+                    colors = buttonColors
+                ) {
+                    Text("Home - Mapa",
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Button(onClick = {navController.navigate(Screens.LIST_LOCATIONS.route)}) {
-                    Text("Locais")
+
+                Button(onClick = {navController.navigate(Screens.LIST_LOCATIONS.route){ restoreState = true }},
+                    modifier = buttonModifier,
+                    colors = buttonColors
+                ) {
+                    Text("Locais",
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Button(onClick = {navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)}) {
-                    Text("Pontos de Interesse")
+
+                Button(onClick = {navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route){ restoreState = true }},
+                    modifier = buttonModifier,
+                    colors = buttonColors
+                ) {
+                    Text("Pontos de Interesse",
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Button(onClick = {navController.navigate(Screens.REGISTER_CATEGORY.route)}) {
-                    Text("Categorias")
+
+                Button(onClick = {navController.navigate(Screens.REGISTER_CATEGORY.route){ restoreState = true }},
+                    modifier = buttonModifier,
+                    colors = buttonColors
+                ) {
+                    Text("Categorias",
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
                 // More menu items...
             }
@@ -193,7 +205,7 @@ fun InitializationView( viewModel: AuthViewModel, navController: NavHostControll
         CircularProgressIndicator()
         LaunchedEffect(Unit) {
             // Perform initialization tasks
-            delay(2000);
+            delay(2000)
             // Example: Check if user is authenticated
             if (viewModel.isUserAuthenticated()) {
                 navController.navigate(Screens.MAIN.route) {

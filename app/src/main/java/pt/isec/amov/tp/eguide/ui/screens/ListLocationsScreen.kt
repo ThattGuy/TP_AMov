@@ -30,6 +30,14 @@ fun LocationItem(location: Location,viewModel: LocationViewModel,navController: 
     Column(modifier = Modifier.padding(16.dp)) {
         Row {
 
+            if(userId == location.createdBy)
+            {
+                Button(onClick = {
+                   //TODO
+                }) {
+                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.edit_location))
+                }
+            }
 
             Button(onClick = {
                 viewModel.locationSelected = location

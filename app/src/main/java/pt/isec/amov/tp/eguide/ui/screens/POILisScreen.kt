@@ -2,6 +2,7 @@
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,14 +16,45 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
+import pt.isec.amov.tp.eguide.utils.firebase.FAuthUtil
 
 
-@Composable
-fun PointOfInterestItem(pointOfInterest: PointOfInterest) {
+   @Composable
+fun PointOfInterestItem(pointOfInterest: PointOfInterest,navController: NavController,
+                        viewModel: LocationViewModel) {
+    val userId = FAuthUtil.currentUser?.uid.toString()
+    val listOfApprovals = viewModel.getApprovalsOfPointOfInterest(pointOfInterest)
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = pointOfInterest.name ?: stringResource(id = pt.isec.amov.tp.eguide.R.string.no_name))
 
+        Row {
+
+            if(userId == pointOfInterest.createdBy)
+            {
+                Button(onClick = {
+                    //TODO
+                }) {
+                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.edit_point_of_interest))
+                }
+            }
+
+            Button(onClick = { /*TODO*/ }) {
+                Text(
+                    text = pointOfInterest.name
+                        ?: stringResource(id = pt.isec.amov.tp.eguide.R.string.no_name)
+                )
+
+            }
+            if(userId != pointOfInterest.createdBy && pointOfInterest.isApproved == false && !listOfApprovals.contains(userId))
+            {
+                Button(onClick = {
+                    viewModel.userApprovesPointOfInterest(pointOfInterest,userId)
+                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                }) {
+                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.approve))
+                }
+
+            }
         }
 
 
@@ -54,7 +86,7 @@ Column(
     ) {
 
         items(listaTetse) { pointOfIterest ->
-            PointOfInterestItem(pointOfInterest = pointOfIterest)
+            PointOfInterestItem(pointOfInterest = pointOfIterest,navController = navController,viewModel = viewModel)
         }
     }
 }

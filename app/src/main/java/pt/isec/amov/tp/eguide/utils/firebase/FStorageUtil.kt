@@ -8,6 +8,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import pt.isec.amov.tp.eguide.data.Location
+import pt.isec.amov.tp.eguide.data.PointOfInterest
 
 class FStorageUtil {
     companion object {
@@ -135,7 +136,7 @@ class FStorageUtil {
 
 
 
-
+/*
         fun fetchLocations(callback: (ArrayList<Location>) -> Unit) {
             val db = Firebase.firestore
 
@@ -159,6 +160,7 @@ class FStorageUtil {
                     callback(ArrayList()) // Em caso de falha, chamando o callback com uma lista vazia
                 }
         }
+        */
 
         fun insertPointOfInterest(
             name: String,
@@ -190,6 +192,31 @@ class FStorageUtil {
                 .addOnFailureListener { e ->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
+        }
+
+        suspend fun providePointsOfInterest(name: String?): java.util.ArrayList<PointOfInterest> {
+            return try {
+                val db = Firebase.firestore
+                val lista = ArrayList<PointOfInterest>()
+
+                val querySnapshot = db.collection("Locations").document(name!!)
+                    .collection("PointsOfInterest").get().await()
+                for (document in querySnapshot.documents) {
+                    val pointOfInterest = PointOfInterest(
+                        document.id,
+                        document.data?.get("Description").toString(),
+                        document.data?.get("Location").toString(),
+                        document.data?.get("Coordinates").toString()
+                    )
+
+                    lista.add(pointOfInterest)
+                }
+
+                lista
+            } catch (e: Exception) {
+                Log.d(ContentValues.TAG, "Error getting documents: ", e)
+                ArrayList()
+            }
         }
 
 

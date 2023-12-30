@@ -42,23 +42,10 @@ fun LocationItem(location: Location,viewModel: LocationViewModel,navController: 
        var lista = viewModel.getLocations()
 
 
-   /* for(i in 1..100)
-    {
-        listaTetse.add(Location(
-            "${i}º location",
-            "${i}º address",
-            document.data["Coordinates"].toString()
-        ))
-    }
-    */
-
-
-
-    Text(text = "Locais")
-    if(lista.size == 0)
-        Text(text = "Esta lista nao tem nada")
-Column {
-
+Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
 
     Button(onClick = { navController.navigate(Screens.REGISTER_LOCATION.route) }) {
         Text(text = "Registar local")

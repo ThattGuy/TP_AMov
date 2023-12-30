@@ -40,7 +40,10 @@ fun ListPointsOfInterest(modifier: Modifier = Modifier, viewModel: LocationViewM
     }
 
     */
-Column {
+Column(
+    verticalArrangement = Arrangement.Top,
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
 
 
     Button(onClick = { navController.navigate(Screens.REGISTER_POINT_OF_INTEREST.route) }) {

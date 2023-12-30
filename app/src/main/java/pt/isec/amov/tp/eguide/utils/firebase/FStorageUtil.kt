@@ -175,16 +175,7 @@ class FStorageUtil {
                 "Location" to locationSelected?.name
             )
 
-            /*
-            db.collection("PointsOfInterest").document(name).set(data)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e ->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
 
-             */
             db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest").document(name).set(data)
                 .addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")

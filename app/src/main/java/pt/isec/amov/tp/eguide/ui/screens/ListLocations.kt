@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.firestore.ktx.firestore
@@ -35,7 +36,7 @@ fun LocationItem(location: Location,viewModel: LocationViewModel,navController: 
                 viewModel.locationSelected = location
                 navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
             }) {
-                Text(text = location.name ?: "Nome não disponível")
+                Text(text = location.name ?: stringResource(id = pt.isec.amov.tp.eguide.R.string.no_name))
                 //Text(text = location.address ?: "Endereço não disponível")
             }
             if(FAuthUtil.currentUser?.uid != location.createdBy && location.isApproved == false)
@@ -44,9 +45,11 @@ fun LocationItem(location: Location,viewModel: LocationViewModel,navController: 
                  viewModel.userApprovesLocation(location, FAuthUtil.currentUser?.uid.toString())
                     navController.navigate(Screens.LIST_LOCATIONS.route)
                 },
-                modifier = Modifier.background(Color.Blue).padding(5.dp)
+                modifier = Modifier
+                    .background(Color.Blue)
+                    .padding(5.dp)
                 ) {
-                    Text(text = "Aprovar")
+                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.approve))
                 }
             }
         }
@@ -66,7 +69,7 @@ Column(
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
 if(lista.size == 0)
-    Text(text = "A lista esta vazia")
+    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.no_locations))
     Button(onClick = { navController.navigate(Screens.REGISTER_LOCATION.route) }) {
         Text(text = "Registar local")
     }

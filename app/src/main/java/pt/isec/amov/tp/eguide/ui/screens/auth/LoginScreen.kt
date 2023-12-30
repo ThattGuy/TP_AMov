@@ -50,6 +50,8 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
     val error by remember {viewModel.error}
     val user by remember {viewModel.user}
     val context = LocalContext.current
+
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -93,11 +95,11 @@ fun LoginScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel, navCont
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { viewModel.loginWithEmail(email, password) }) {
-            Text("Login")
+            Text(stringResource(id = R.string.login) )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { navController.navigate("register") }) {
-            Text("Register")
+            Text(stringResource(id = R.string.register) )
         }
 
         Button(onClick = {

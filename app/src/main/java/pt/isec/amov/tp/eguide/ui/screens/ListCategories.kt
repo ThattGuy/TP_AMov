@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pt.isec.amov.tp.eguide.data.Category
@@ -20,7 +21,7 @@ import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 fun CategoryItem(category: Category) {
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = { /*TODO*/ }) {
-            Text(text = category.name ?: "Nome não disponível")
+            Text(text = category.name ?: stringResource(id = pt.isec.amov.tp.eguide.R.string.no_name))
         }
     }
 }
@@ -38,7 +39,7 @@ fun ListCategories(viewModel : LocationViewModel,  navController: NavController)
 
 
         Button(onClick = { navController.navigate(Screens.REGISTER_CATEGORY.route) }) {
-            Text(text = "Registar Categoria")
+            Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.register_category))
         }
         LazyColumn(
             verticalArrangement = Arrangement.Center,

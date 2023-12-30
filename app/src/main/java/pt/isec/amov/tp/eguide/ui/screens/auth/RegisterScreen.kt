@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,28 +69,28 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
     ) {
         Image(
             painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo Icon",
+            contentDescription = stringResource(id = R.string.logo_description),
             modifier = Modifier.size(150.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Name") },
+            label = { Text(stringResource(id = R.string.name) ) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(stringResource(id = R.string.username) ) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(id = R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
@@ -104,14 +105,14 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("New Password") },
+            label = { Text(stringResource(id = R.string.password)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = cpassword,
             onValueChange = { cpassword = it },
-            label = { Text("Confirm New Password") },
+            label = { Text(stringResource(id = R.string.confirmPassword)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(50.dp))
@@ -130,7 +131,7 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
                     cpassword
                 )
             }) {
-                Text("Register")
+                Text(stringResource(id = R.string.register) )
             }
         }
         if (error != null) {

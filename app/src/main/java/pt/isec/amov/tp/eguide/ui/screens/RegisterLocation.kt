@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -38,11 +39,11 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TextField(value = name, onValueChange = {name = it}, placeholder = { Text(text = "Nome")})
+        TextField(value = name, onValueChange = {name = it}, placeholder = { Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.name))})
         TextField(value = description, onValueChange = {description = it}, placeholder = { Text(text = "Descrição")})
 
         Button(onClick = {/*TODO*/}){
-            Text(text = "Selecionar imagem")
+            Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.select_image))
         }
 
         Button(onClick = {
@@ -52,7 +53,7 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
 
 
         }){
-            Text(text = "Salvar")
+            Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.save))
         }
 
 

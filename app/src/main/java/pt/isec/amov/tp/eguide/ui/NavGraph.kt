@@ -29,7 +29,7 @@ fun SetupNavGraph(navController: NavHostController,
     NavHost(
         navController = navController,
         startDestination = Screens.Initialization.route
-        //startDestination = Screens.LIST_LOCATIONS.route
+        //startDestination = Screens.REGISTER_POINT_OF_INTEREST.route
 
     ) {
         composable(Screens.Initialization.route){

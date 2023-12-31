@@ -99,7 +99,7 @@ fun SetupNavGraph(navController: NavHostController,
 
         composable(Screens.Credits.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
-                Credits(navController = navController)
+                Credits()
             }
         }
     }

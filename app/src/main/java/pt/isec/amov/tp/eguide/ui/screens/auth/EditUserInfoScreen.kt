@@ -1,6 +1,5 @@
 package pt.isec.amov.tp.eguide.ui.screens.auth
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,21 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,29 +28,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuccess: () -> Unit) {
-    var name by remember { viewModel.name }
+fun EditUserInfoScreen(
+    modifier: Modifier = Modifier,
+    viewModel: AuthViewModel,
+    navController: NavHostController
+) {
+    var name by remember { mutableStateOf(viewModel.user.value?.name ?: "") }
     var username by remember { viewModel.username }
-    var email by remember {viewModel.email }
-    var password by  remember { viewModel.password }
-    var cpassword by remember { viewModel.cpassword }
-    val error by remember {viewModel.error }
-    val user by remember {viewModel.user }
+    var email by remember { mutableStateOf(viewModel.user.value?.email ?: "") }
+    var password by remember { mutableStateOf("") }
+    var cpassword by remember { mutableStateOf("") }
+    val error by remember { viewModel.error }
 
-    LaunchedEffect(key1 = user) {
-        if (user !=null && error == null)
-            onSuccess()
-    }
-
+    //todo add image
+    //todo add name
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -117,21 +108,21 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
         )
         Spacer(modifier = Modifier.height(50.dp))
 
-        Row(
+        Column(
             modifier = Modifier,
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Button(onClick = {
-                viewModel.createUserWithEmail(
-                    name,
-                    username,
-                    email,
-                    password,
-                    cpassword
-                )
+                viewModel.updateUserInformation(name, username, email, password, cpassword)
             }) {
-                Text(stringResource(id = R.string.register) )
+                Text(stringResource(id = R.string.save))
+            }
+            Button(onClick = {
+                viewModel.signOut()
+                navController.navigate("login")
+            }) {
+                Text(stringResource(id = R.string.sign_out) )
             }
         }
         if (error != null) {
@@ -151,52 +142,5 @@ fun RegisterScreen(modifier: Modifier = Modifier, viewModel: AuthViewModel,onSuc
         }
     }
 }
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-//(text: String, content: String)
-fun TextBox(text: String, content: String) {
-    Column(
-        modifier = Modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    )
-    {
-        TextField(
-            modifier = Modifier
-                .background(Color.White),
-            value = content,
-            onValueChange = { content },
-            label = { Text(text = text) },
-            maxLines = 2,
-            /*leadingIcon = {
-                IconButton(onClick = {  }) {
-                    Icon(imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Profile Name Icon")
-                }
-            },*/
-            trailingIcon = {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Check Icon"
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    Log.d("ImeAction", "Clicked")
-                }
-            )
-        )
-
-    }
-
-}*/
 
 

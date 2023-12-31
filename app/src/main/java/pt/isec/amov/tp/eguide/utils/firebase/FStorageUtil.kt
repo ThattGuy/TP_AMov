@@ -90,7 +90,7 @@ class FStorageUtil {
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
             //Inserir uma colecao "utilizadors que aprovaram o local"
-            db.collection("Locations").document(name).collection("ApprovedByUsers").document(userId.toString()).set(irrelevantData)
+          /*  db.collection("Locations").document(name).collection("ApprovedByUsers").document(userId.toString()).set(irrelevantData)
                 .addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
                 }
@@ -105,6 +105,8 @@ class FStorageUtil {
                 .addOnFailureListener { e->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
+
+           */
         }
 
         /*fun provideLocations() : ArrayList<Location>{
@@ -216,7 +218,7 @@ class FStorageUtil {
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
 
-            db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
+           /* db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
                 .document(name).collection("ApprovedByUsers")
                 .document(FAuthUtil.currentUser?.uid.toString()).set(irrelevantData)
                 .addOnSuccessListener {
@@ -226,7 +228,7 @@ class FStorageUtil {
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
 
-
+*/
         }
 
         suspend fun providePointsOfInterest(name: String?): java.util.ArrayList<PointOfInterest> {
@@ -317,7 +319,7 @@ class FStorageUtil {
                auxList.add(user.id)
            }
            //if(querySnapshot.documents.size >= 4)
-           if(auxList.size >= 3)
+           if(auxList.size >= 2)
                     {
                         db.collection("Locations").document(location.name.toString()).update("IsApproved",true)
                             .addOnSuccessListener {
@@ -352,7 +354,7 @@ class FStorageUtil {
             {
                 auxList.add(user.id)
             }
-            if(auxList.size >= 3)
+            if(auxList.size >= 2)
             {
                 db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).update("IsApproved",true)
                     .addOnSuccessListener {

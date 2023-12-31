@@ -78,16 +78,16 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
 
     val context = LocalContext.current
 
-    DisposableEffect(context) {
+    DisposableEffect(Unit) {
         // Accessing the context within the DisposableEffect
-        val applicationContext = context.applicationContext
 
         Configuration.getInstance().load(
-            applicationContext,
-            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            context,
+            androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         )
+
         onDispose {
-            //NO-OP
+            // Cleanup if necessary
         }
     }
 

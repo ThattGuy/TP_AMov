@@ -24,14 +24,12 @@
     <string name="description">Description</string>
     <string name="coordinates">Coordinates</string>
     <string name="get_coordinates">My coordinates</string>
-<<<<<<< HEAD
     <string name="home">Home</string>
     <string name="points_of_interest">Points of Interest</string>
     <string name="locations">Locations</string>
     <string name="categories">Categories</string>
     <string name="password_updated">Password Updated</string>
     <string name="sign_out">Sign Out</string>
-=======
     <string name="edit_category">Edit</string>
     <string name="edit_location">Edit</string>
     <string name="edit_point_of_interest">Edit</string>

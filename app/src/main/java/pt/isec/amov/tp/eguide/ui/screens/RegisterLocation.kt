@@ -34,6 +34,9 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
     var description by rememberSaveable { mutableStateOf("") }
     var location by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("")}
+    var coordinates by rememberSaveable {
+        mutableStateOf("")
+    }
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -41,6 +44,10 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
 
         TextField(value = name, onValueChange = {name = it}, placeholder = { Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.name))})
         TextField(value = description, onValueChange = {description = it}, placeholder = { Text(text = "Descrição")})
+        TextField(value = coordinates, onValueChange = {coordinates = it},label = { Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.coordinates))})
+        Button(onClick = { coordinates =  viewModel.extrairString(viewModel.currentLocation.value.toString())!!}) {
+            Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.get_coordinates))
+        }
 
         Button(onClick = {/*TODO*/}){
             Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.select_image))
@@ -49,7 +56,7 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
         Button(onClick = {
             print("\n\n\n Vim aquiii")
             location = viewModel._currentLocation.value.toString()
-            viewModel.insertLocationIntoDB(name,description)
+            viewModel.insertLocationIntoDB(name,description,coordinates)
 
 
         }){

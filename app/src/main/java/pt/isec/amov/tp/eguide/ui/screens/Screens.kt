@@ -11,7 +11,9 @@ enum class Screens(display: String) {
     LIST_POINTS_OF_INTEREST("ListPointsOfInterest"),
     LIST_CATEGORIES("ListCategories"),
     REGISTER_POINT_OF_INTEREST("RegisterPointOfInterest"),
-    PROFILE("Profile");
+    PROFILE("Profile"),
+    CONTRIBUTIONS("MyContributions"),
+    Credits("Credits");
 
 
     val route : String

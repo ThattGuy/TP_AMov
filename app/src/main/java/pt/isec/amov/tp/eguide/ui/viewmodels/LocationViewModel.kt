@@ -68,12 +68,12 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
        FStorageUtil.insertCategoryIntoDB(categoryName,categoryDescription)
     }
 
-   fun insertLocationIntoDB(name : String,description: String){
+   fun insertLocationIntoDB(name : String,description: String,coordinates: String){
 
-       val location = extrairString(this._currentLocation.value.toString())
+       //val location = extrairString(this._currentLocation.value.toString())
 
-       print("\n\n\n\n localização: " +location)
-       FStorageUtil.insertLocationIntoDB(name,description,location!!)
+       //print("\n\n\n\n localização: " +location)
+       FStorageUtil.insertLocationIntoDB(name,description,coordinates)
 
    }
 

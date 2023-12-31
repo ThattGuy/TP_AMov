@@ -194,7 +194,8 @@ class FStorageUtil {
             name: String,
             description: String,
             coordinates: String,
-            locationSelected: Location?
+            locationSelected: Location?,
+            category : String
         ) {
 
             val db = Firebase.firestore
@@ -203,6 +204,7 @@ class FStorageUtil {
                 "Coordinates" to coordinates,
                 "Location" to locationSelected?.name,
                 "CreatedBy" to FAuthUtil.currentUser?.uid,
+                "Category" to category,
                 "IsApproved" to false
             )
 
@@ -245,6 +247,7 @@ class FStorageUtil {
                         document.data?.get("Location").toString(),
                         document.data?.get("Coordinates").toString(),
                         document.data?.get("CreatedBy").toString(),
+
                         document.data?.get("IsApproved") as Boolean
                     )
 

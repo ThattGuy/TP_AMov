@@ -7,6 +7,8 @@ data class PointOfInterest(val name: String?,
                            val location: String?,
                            val coordinates: String?,
                            val createdBy : String?,
-                           var isApproved : Boolean? = false){
+                           var isApproved : Boolean? = false,
+//                           var category : String
+){
 
 }

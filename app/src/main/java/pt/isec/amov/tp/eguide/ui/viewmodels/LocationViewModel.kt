@@ -110,10 +110,11 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
     fun insertPointOfInterest(
         name: String,
         description: String,
-        coordinates: String
+        coordinates: String,
+        category : String
     ) {
 
-        FStorageUtil.insertPointOfInterest(name,description,coordinates,this.locationSelected)
+        FStorageUtil.insertPointOfInterest(name,description,coordinates,this.locationSelected,category)
     }
 
     fun getPointsOfInterest() : ArrayList<PointOfInterest> {

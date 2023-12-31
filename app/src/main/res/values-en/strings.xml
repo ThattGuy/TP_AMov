@@ -34,8 +34,8 @@
     <string name="edit_category">Edit</string>
     <string name="edit_location">Edit</string>
     <string name="edit_point_of_interest">Edit</string>
-
-
+    <string name="portuguese">Portuguese</string>
+    <string name="english">English</string>
 
 
 </resources>

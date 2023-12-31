@@ -5,10 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pt.isec.amov.tp.eguide.ui.screens.CreateLocationScreen
+import pt.isec.amov.tp.eguide.ui.screens.Credits
 import pt.isec.amov.tp.eguide.ui.screens.ListCategories
 import pt.isec.amov.tp.eguide.ui.screens.ListLocations
 import pt.isec.amov.tp.eguide.ui.screens.ListPointsOfInterest
 import pt.isec.amov.tp.eguide.ui.screens.MainScreen
+import pt.isec.amov.tp.eguide.ui.screens.MyContributions
 import pt.isec.amov.tp.eguide.ui.screens.RegisterCategory
 import pt.isec.amov.tp.eguide.ui.screens.RegisterPointOfInterest
 import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
@@ -81,9 +83,23 @@ fun SetupNavGraph(navController: NavHostController,
                 ListCategories(viewModel = locationViewModel, navController = navController)
             }
         }
+
         composable(Screens.PROFILE.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 EditUserInfoScreen(viewModel = authViewModel, navController = navController)
+            }
+        }
+
+        composable(Screens.CONTRIBUTIONS.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                MyContributions()
+            }
+        }
+
+
+        composable(Screens.Credits.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                Credits()
             }
         }
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources>\
     <string name="logo_description">Logotipo da Empresa</string>
     <string name="email">Email</string>
     <string name="password">Senha</string>
@@ -35,7 +35,8 @@
     <string name="edit_category">Editar</string>
     <string name="edit_location">Editar</string>
     <string name="edit_point_of_interest">Editar</string>
-
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
 
 </resources>
 

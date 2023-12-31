@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources>\
     <string name="logo_description">Logotipo da Empresa</string>
     <string name="email">Email</string>
     <string name="password">Senha</string>
@@ -19,7 +19,7 @@
     <string name="category_name">Nome da Categoria</string>
     <string name="category_description">Descrição da Categoria</string>
     <string name="select_image">Selecionar Imagem</string>
-<<<<<<< HEAD
+
     <string name="save">Salvar</string>
     <string name="description">Descrição</string>
     <string name="coordinates">Coordenadas</string>
@@ -30,16 +30,13 @@
     <string name="categories">Categorias</string>
     <string name="password_updated">Password Updated</string>
     <string name="sign_out">Sign Out</string>
-</resources>
-=======
-    <string name="save">Save</string>
-    <string name="description">Description</string>
-    <string name="coordinates">Coordinates</string>
-    <string name="get_coordinates">My coordinates</string>
+
+
     <string name="edit_category">Editar</string>
     <string name="edit_location">Editar</string>
     <string name="edit_point_of_interest">Editar</string>
-
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
 
 </resources>
->>>>>>> 8f9b616e3af6c70e963acc19c514c31deeb733c0
+

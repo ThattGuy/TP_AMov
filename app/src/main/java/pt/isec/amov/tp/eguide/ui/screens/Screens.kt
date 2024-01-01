@@ -13,7 +13,8 @@ enum class Screens(display: String) {
     REGISTER_POINT_OF_INTEREST("RegisterPointOfInterest"),
     PROFILE("Profile"),
     CONTRIBUTIONS("MyContributions"),
-    Credits("Credits");
+    CREDITS("Credits"),
+    CHOOSEWHATTOREGISTER("ChooseWhatToRegister");
 
 
     val route : String

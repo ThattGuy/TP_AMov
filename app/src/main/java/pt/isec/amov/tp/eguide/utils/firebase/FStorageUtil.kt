@@ -1,77 +1,50 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
 import android.content.ContentValues
+import android.content.res.AssetManager
 import android.util.Log
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
 import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.Location
 import pt.isec.amov.tp.eguide.data.PointOfInterest
+import java.io.IOException
+import java.io.InputStream
 
 class FStorageUtil {
     companion object {
-        /*fun addDataToFirestore(onResult: (Throwable?) -> Unit) {
-            val db = Firebase.firestore
 
-            val scores = hashMapOf(
-                "nrgames" to 0,
-                "topscore" to 0
-            )
-            db.collection("Scores").document("Level1").set(scores)
-                .addOnCompleteListener { result ->
-                    onResult(result.exception)
-                }
-        }
-
-            val db = Firebase.firestore
-            val v = db.collection("Scores").document("Level1")
-
-            v.get(Source.SERVER)
-                .addOnSuccessListener {
-                    val exists = it.exists()
-                    Log.i("Firestore", "updateDataInFirestore: Success? $exists")
-                    if (!exists) {
-                        onResult(Exception("Doesn't exist"))
-                        return@addOnSuccessListener
-                    }
-                    val value = it.getLong("nrgames") ?: 0
-                    v.update("nrgames", value + 1)
-                    onResult(null)
-                }
-                .addOnFailureListener { e ->
-                    onResult(e)
-                }
-        }*/
-
-         fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
+        fun insertCategoryIntoDB(categoryName: String, categoryDescription: String) {
             val db = com.google.firebase.Firebase.firestore
-            val nameData = hashMapOf("Name" to categoryName,
-                                     "Description" to categoryDescription,
-                                      "CreatedBy" to FAuthUtil.currentUser?.uid,
-                                      "IsApproved" to false)
+            val nameData = hashMapOf(
+                "Name" to categoryName,
+                "Description" to categoryDescription,
+                "CreatedBy" to FAuthUtil.currentUser?.uid,
+                "IsApproved" to false
+            )
 
-
-            db.collection("Categories").document(categoryName).set(nameData)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
+            db.collection("Categories").document(categoryName).set(nameData).addOnSuccessListener {
+                Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+            }.addOnFailureListener { e ->
+                Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+            }
 
         }
 
-        fun insertLocationIntoDB(name: String,description: String, locationCoordinates : String)
-        {
+        fun insertLocationIntoDB(name: String, description: String, locationCoordinates: String) {
             val db = Firebase.firestore
             val userId = FAuthUtil.currentUser?.uid
-            val data = hashMapOf("Description" to description,
-                                "Coordinates" to locationCoordinates,
-                                "CreatedBy" to userId,
-                                "IsApproved" to false
-                )
+            val data = hashMapOf(
+                "Description" to description,
+                "Coordinates" to locationCoordinates,
+                "CreatedBy" to userId,
+                "IsApproved" to false
+            )
 
             //val irrelevantData = hashMapOf("Nothing here" to "Nothing here")
             val irrelevantData = hashMapOf(
@@ -82,61 +55,34 @@ class FStorageUtil {
                 "IsApproved" to false
             )
             //Inserir um local
-            db.collection("Locations").document(name).set(data)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
+            db.collection("Locations").document(name).set(data).addOnSuccessListener {
+                Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+            }.addOnFailureListener { e ->
+                Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+            }
             //Inserir uma colecao "utilizadors que aprovaram o local"
-          /*  db.collection("Locations").document(name).collection("ApprovedByUsers").document(userId.toString()).set(irrelevantData)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
-            //Inserir uma colecao Pontos de interesse do local
-            db.collection("Locations").document(name).collection("PointsOfInterest").document("ReferencePoint").set(irrelevantData)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
+            /*  db.collection("Locations").document(name).collection("ApprovedByUsers").document(userId.toString()).set(irrelevantData)
+                  .addOnSuccessListener {
+                      Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                  }
+                  .addOnFailureListener { e->
+                      Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                  }
+              //Inserir uma colecao Pontos de interesse do local
+              db.collection("Locations").document(name).collection("PointsOfInterest").document("ReferencePoint").set(irrelevantData)
+                  .addOnSuccessListener {
+                      Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                  }
+                  .addOnFailureListener { e->
+                      Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
+                  }
 
-           */
+             */
         }
 
-        /*fun provideLocations() : ArrayList<Location>{
 
 
-            val db = Firebase.firestore
-            val lista = ArrayList<Location>()
-           val location = db.collection("Locations").get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val location = Location(document.id,document.data["Description"].toString(),document.data["Coordinates"].toString())
-                        lista.add(location)
-                    }
-                    return@addOnSuccessListener lista
-
-                }
-                .addOnFailureListener { exception ->
-
-                Log.d(ContentValues.TAG, "\n\n\nError getting documents: ", exception)
-
-                }
-//retiurn lista
-            return lista
-
-        }
-
-         */
-
-
-         suspend fun provideLocations(): ArrayList<Location> {
+        suspend fun provideLocations(): ArrayList<Location> {
             return try {
                 val db = Firebase.firestore
                 val lista = ArrayList<Location>()
@@ -162,107 +108,68 @@ class FStorageUtil {
         }
 
 
-
-
-/*
-        fun fetchLocations(callback: (ArrayList<Location>) -> Unit) {
-            val db = Firebase.firestore
-
-            db.collection("Locations").get()
-                .addOnSuccessListener { result ->
-                    val lista = ArrayList<Location>()
-
-                    for (document in result) {
-                        val location = Location(
-                            document.id,
-                            document.data["Description"].toString(),
-                            document.data["Coordinates"].toString()
-                        )
-                        lista.add(location)
-                    }
-
-                    callback(lista) // Chamando o callback com a lista de locais
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(ContentValues.TAG, "Error getting documents: ", exception)
-                    callback(ArrayList()) // Em caso de falha, chamando o callback com uma lista vazia
-                }
-        }
-        */
-
         fun insertPointOfInterest(
             name: String,
             description: String,
             coordinates: String,
             locationSelected: Location?,
-            category : String
+            category: String,
         ) {
 
             val db = Firebase.firestore
+
+            val likes = 0;
+            val dislikes = 0;
+
             val data = hashMapOf(
                 "Description" to description,
                 "Coordinates" to coordinates,
                 "Location" to locationSelected?.name,
                 "CreatedBy" to FAuthUtil.currentUser?.uid,
                 "Category" to category,
-                "IsApproved" to false
+                "IsApproved" to false,
+                "Likes" to likes,
+                "Dislikes" to dislikes
             )
-
-            val irrelevantData = hashMapOf("Creator" to FAuthUtil.currentUser?.uid.toString())
-
-
-            db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
-                .document(name).set(data)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+            db.collection("POI").document(name).set(data)
+                .addOnCompleteListener { result ->
+                    Log.e("Firestore", "Point of interest added")
                 }
-                .addOnFailureListener { e ->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
-
-           /* db.collection("Locations").document(locationSelected?.name.toString()).collection("PointsOfInterest")
-                .document(name).collection("ApprovedByUsers")
-                .document(FAuthUtil.currentUser?.uid.toString()).set(irrelevantData)
-                .addOnSuccessListener {
-                    Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e ->
-                    Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                }
-
-*/
         }
 
-        suspend fun providePointsOfInterest(name: String?): java.util.ArrayList<PointOfInterest> {
-            return try {
-                val db = Firebase.firestore
-                val lista = ArrayList<PointOfInterest>()
+        fun getAllPointsOfInterest(onResult: (PointOfInterest) -> Unit) {
+            val db = Firebase.firestore
+            val poiTable = db.collection("POI")
 
-                val querySnapshot = db.collection("Locations").document(name!!)
-                    .collection("PointsOfInterest").get().await()
-                for (document in querySnapshot.documents) {
-                    val pointOfInterest = PointOfInterest(
-                        document.id,
-                        document.data?.get("Description").toString(),
-                        document.data?.get("Location").toString(),
-                        document.data?.get("Coordinates").toString(),
-                        document.data?.get("CreatedBy").toString(),
-
-                        document.data?.get("IsApproved") as Boolean
-                    )
-
-                    lista.add(pointOfInterest)
+            poiTable.get(Source.SERVER).addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    Log.e("Firestore", "No points of interest found")
+                    return@addOnSuccessListener
                 }
 
-                lista
-            } catch (e: Exception) {
-                Log.d(ContentValues.TAG, "Error getting documents: ", e)
-                ArrayList()
+                for (resultDocument in result) {
+                    val pointOfInterest = PointOfInterest(
+                        resultDocument.id,
+                        resultDocument.getString("Description") ?: "",
+                        resultDocument.getString("Location") ?: "",
+                        resultDocument.getString("Coordinates") ?: "",
+                        resultDocument.getString("CreatedBy") ?: "",
+                        resultDocument.getBoolean("IsApproved") ?: false
+                    )
+
+                    onResult(pointOfInterest)
+                }
+            }.addOnFailureListener { exception ->
+                Log.e("Firestore", "Error getting points of interest", exception)
             }
         }
 
-       suspend fun provideCategories() :ArrayList<Category> {
-            return try{
+        suspend fun getCityPointOfInterest(name: String): java.util.ArrayList<PointOfInterest> {
+            return ArrayList()
+        }
+
+        suspend fun provideCategories(): ArrayList<Category> {
+            return try {
                 val db = Firebase.firestore
                 val lista = ArrayList<Category>()
 
@@ -292,24 +199,23 @@ class FStorageUtil {
             val querySnapshot = db.collection("Locations").document(location.name.toString())
                 .collection("ApprovedByUsers").get().await()
 
-            for(user in querySnapshot.documents)
-            {
+            for (user in querySnapshot.documents) {
                 listToReturn.add(user.id)
             }
             return listToReturn
         }
-       suspend fun userApprovesLocation(location: Location, userId: String)  {
+
+        suspend fun userApprovesLocation(location: Location, userId: String) {
             val db = Firebase.firestore
-           var auxList = ArrayList<String>()
+            var auxList = ArrayList<String>()
             val data = hashMapOf(
                 "UserId" to userId
             )
 
-            db.collection("Locations").document(location.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
-                .addOnSuccessListener {
+            db.collection("Locations").document(location.name.toString())
+                .collection("ApprovedByUsers").document(userId).set(data).addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
             //recolher lista de ApprovedByUsers
@@ -317,53 +223,46 @@ class FStorageUtil {
             val querySnapshot = db.collection("Locations").document(location.name.toString())
                 .collection("ApprovedByUsers").get().await()
 
-           for(user in querySnapshot.documents)
-           {
-               auxList.add(user.id)
-           }
-           //if(querySnapshot.documents.size >= 4)
-           if(auxList.size >= 2)
-                    {
-                        db.collection("Locations").document(location.name.toString()).update("IsApproved",true)
-                            .addOnSuccessListener {
-                                Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
-                            }
+            for (user in querySnapshot.documents) {
+                auxList.add(user.id)
+            }
+            //if(querySnapshot.documents.size >= 4)
+            if (auxList.size >= 2) {
+                db.collection("Locations").document(location.name.toString())
+                    .update("IsApproved", true).addOnSuccessListener {
+                        Log.i(ContentValues.TAG, "addDataToFirestore: Success")
+                    }.addOnFailureListener { e ->
+                        Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                     }
+            }
 
-                }
+        }
 
         suspend fun userApprovesPointOfInterest(pointOfInterest: PointOfInterest, userId: String) {
             val db = Firebase.firestore
-            val data = hashMapOf(
-                "UserId" to userId
-            )
+            val data = hashMapOf("UserId" to userId)
             var auxList = ArrayList<String>()
 
-            db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
-                .addOnSuccessListener {
+            db.collection("POI").document(pointOfInterest.name.toString())
+                .collection("ApprovedByUsers").document(userId).set(data).addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
-            //recolher lista de ApprovedByUsers
 
-            val querySnapshot = db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).collection("ApprovedByUsers").get().await()
+            // Collect list of ApprovedByUsers
+            val querySnapshot = db.collection("POI").document(pointOfInterest.name.toString())
+                .collection("ApprovedByUsers").get().await()
 
-            for(user in querySnapshot.documents)
-            {
+            for (user in querySnapshot.documents) {
                 auxList.add(user.id)
             }
-            if(auxList.size >= 2)
-            {
-                db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString()).update("IsApproved",true)
-                    .addOnSuccessListener {
+
+            if (auxList.size >= 2) {
+                db.collection("POI").document(pointOfInterest.name.toString())
+                    .update("IsApproved", true).addOnSuccessListener {
                         Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                    }
-                    .addOnFailureListener { e ->
+                    }.addOnFailureListener { e ->
                         Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                     }
             }
@@ -372,45 +271,42 @@ class FStorageUtil {
         suspend fun getApprovalsOfPointOfInterest(pointOfInterest: PointOfInterest): ArrayList<String> {
             val db = Firebase.firestore
             val listToReturn = ArrayList<String>()
-            val querySnapshot = db.collection("Locations").document(pointOfInterest.location.toString()).collection("PointsOfInterest").document(pointOfInterest.name.toString())
-                .collection("ApprovedByUsers").get().await()
+            val querySnapshot =
+                db.collection("POI").document(pointOfInterest.name.toString())
+                    .collection("ApprovedByUsers").get().await()
 
-            for(user in querySnapshot.documents)
-            {
+            for (user in querySnapshot.documents) {
                 listToReturn.add(user.id)
             }
             return listToReturn
         }
 
-       suspend fun userApprovesCategory(category: Category, userId: String) {
+        suspend fun userApprovesCategory(category: Category, userId: String) {
             val db = Firebase.firestore
             val data = hashMapOf(
                 "UserId" to userId
             )
             var auxList = ArrayList<String>()
 
-            db.collection("Categories").document(category.name.toString()).collection("ApprovedByUsers").document(userId).set(data)
-                .addOnSuccessListener {
+            db.collection("Categories").document(category.name.toString())
+                .collection("ApprovedByUsers").document(userId).set(data).addOnSuccessListener {
                     Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                 }
             //recolher lista de ApprovedByUsers
 
-            val querySnapshot = db.collection("Categories").document(category.name.toString()).collection("ApprovedByUsers").get().await()
+            val querySnapshot = db.collection("Categories").document(category.name.toString())
+                .collection("ApprovedByUsers").get().await()
 
-            for(user in querySnapshot.documents)
-            {
+            for (user in querySnapshot.documents) {
                 auxList.add(user.id)
             }
-            if(auxList.size >= 2)
-            {
-                db.collection("Categories").document(category.name.toString()).update("IsApproved",true)
-                    .addOnSuccessListener {
+            if (auxList.size >= 2) {
+                db.collection("Categories").document(category.name.toString())
+                    .update("IsApproved", true).addOnSuccessListener {
                         Log.i(ContentValues.TAG, "addDataToFirestore: Success")
-                    }
-                    .addOnFailureListener { e ->
+                    }.addOnFailureListener { e ->
                         Log.i(ContentValues.TAG, "addDataToFirestore: ${e.message}")
                     }
             }
@@ -421,14 +317,88 @@ class FStorageUtil {
             val listToReturn = ArrayList<String>()
             val querySnapshot = db.collection("Categories").document(category.name.toString())
                 .collection("ApprovedByUsers").get().await()
-                    for (document in querySnapshot.documents) {
-                        listToReturn.add(document.id)
+            for (document in querySnapshot.documents) {
+                listToReturn.add(document.id)
 
-                }
+            }
 
             return listToReturn
         }
 
+        private var listenerRegistration: ListenerRegistration? = null
+        fun startObserver(onNewValues: (PointOfInterest) -> Unit) {
+            stopObserver()
+            val db = Firebase.firestore
+            listenerRegistration = db.collection("POI")
+                .addSnapshotListener{ result, e ->
+                    if(result == null || e != null){
+                        Log.e("Firestore", "Error getting points of interest", e)
+                        return@addSnapshotListener
+                    }
+
+                    if (result.isEmpty) {
+                        android.util.Log.e("Firestore", "No points of interest found")
+                        return@addSnapshotListener
+                    }
+
+                    for (resultDocument in result) {
+                        val pointOfInterest = pt.isec.amov.tp.eguide.data.PointOfInterest(
+                            resultDocument.id,
+                            resultDocument.getString("Description") ?: "",
+                            resultDocument.getString("Location") ?: "",
+                            resultDocument.getString("Coordinates") ?: "",
+                            resultDocument.getString("CreatedBy") ?: "",
+                            resultDocument.getBoolean("IsApproved") ?: false
+                        )
+
+                        onNewValues(pointOfInterest)
+                    }
+                }
+        }
+
+        fun stopObserver() {
+            listenerRegistration?.remove()
+        }
+
+
+        fun getFileFromAsset(assetManager: AssetManager, strName: String): InputStream? {
+            var istr: InputStream? = null
+            try {
+                istr = assetManager.open(strName)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return istr
+        }
+
+//https://firebase.google.com/docs/storage/android/upload-files
+
+        fun uploadFile(inputStream: InputStream, imgFile: String) {
+            val storage = Firebase.storage
+            val ref1 = storage.reference
+            val ref2 = ref1.child("images")
+            val ref3 = ref2.child(imgFile)
+
+            val uploadTask = ref3.putStream(inputStream)
+            uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                ref3.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    println(downloadUri.toString())
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+
+
+        }
 
         /*
         fun updateDataInFirestoreTrans(onResult: (Throwable?) -> Unit) {
@@ -527,5 +497,56 @@ class FStorageUtil {
 
         }*/
 
+        /*
+               fun fetchLocations(callback: (ArrayList<Location>) -> Unit) {
+                   val db = Firebase.firestore
+
+                   db.collection("Locations").get()
+                       .addOnSuccessListener { result ->
+                           val lista = ArrayList<Location>()
+
+                           for (document in result) {
+                               val location = Location(
+                                   document.id,
+                                   document.data["Description"].toString(),
+                                   document.data["Coordinates"].toString()
+                               )
+                               lista.add(location)
+                           }
+
+                           callback(lista) // Chamando o callback com a lista de locais
+                       }
+                       .addOnFailureListener { exception ->
+                           Log.d(ContentValues.TAG, "Error getting documents: ", exception)
+                           callback(ArrayList()) // Em caso de falha, chamando o callback com uma lista vazia
+                       }
+               }
+               */
+
+        /*fun provideLocations() : ArrayList<Location>{
+
+
+            val db = Firebase.firestore
+            val lista = ArrayList<Location>()
+           val location = db.collection("Locations").get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val location = Location(document.id,document.data["Description"].toString(),document.data["Coordinates"].toString())
+                        lista.add(location)
+                    }
+                    return@addOnSuccessListener lista
+
+                }
+                .addOnFailureListener { exception ->
+
+                Log.d(ContentValues.TAG, "\n\n\nError getting documents: ", exception)
+
+                }
+//retiurn lista
+            return lista
+
+        }
+
+         */
     }
 }

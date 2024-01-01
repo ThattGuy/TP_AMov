@@ -2,9 +2,12 @@ package pt.isec.amov.tp.eguide.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import pt.isec.amov.tp.eguide.ui.screens.CreateLocationScreen
+import androidx.navigation.navArgument
+import pt.isec.amov.tp.eguide.ui.screens.ChooseWhatToRegisterScreen
+import pt.isec.amov.tp.eguide.ui.screens.RegisterLocationScreen
 import pt.isec.amov.tp.eguide.ui.screens.Credits
 import pt.isec.amov.tp.eguide.ui.screens.ListCategories
 import pt.isec.amov.tp.eguide.ui.screens.ListLocations
@@ -49,7 +52,7 @@ fun SetupNavGraph(navController: NavHostController,
         }
         composable(Screens.MAIN.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
-                MainScreen(viewModel = locationViewModel)
+                MainScreen(viewModel = locationViewModel, navController = navController)
             }
         }
         composable(Screens.LIST_LOCATIONS.route){
@@ -60,7 +63,21 @@ fun SetupNavGraph(navController: NavHostController,
         }
         composable(Screens.REGISTER_LOCATION.route){
             Layout_Bars(viewModel = authViewModel, navController = navController) {
-                CreateLocationScreen(locationViewModel)
+                RegisterLocationScreen(viewModel = locationViewModel, navController = navController)
+            }
+        }
+        composable("${Screens.REGISTER_LOCATION.route}/{coordinates}", arguments = listOf(
+            navArgument("coordinates") { type = NavType.StringType }
+        )){
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                RegisterLocationScreen(navController = navController, viewModel = locationViewModel)
+            }
+        }
+        composable("${Screens.CHOOSEWHATTOREGISTER.route}/{coordinates}", arguments = listOf(
+            navArgument("coordinates") { type = NavType.StringType }
+        )){
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                ChooseWhatToRegisterScreen(navController = navController)
             }
         }
         composable(Screens.REGISTER_CATEGORY.route){
@@ -69,6 +86,13 @@ fun SetupNavGraph(navController: NavHostController,
             }
         }
         composable(Screens.REGISTER_POINT_OF_INTEREST.route){
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                RegisterPointOfInterest(navController = navController, viewModel = locationViewModel)
+            }
+        }
+        composable("${Screens.REGISTER_POINT_OF_INTEREST.route}/{coordinates}", arguments = listOf(
+            navArgument("coordinates") { type = NavType.StringType }
+        )){
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 RegisterPointOfInterest(navController = navController, viewModel = locationViewModel)
             }
@@ -96,8 +120,7 @@ fun SetupNavGraph(navController: NavHostController,
             }
         }
 
-
-        composable(Screens.Credits.route) {
+        composable(Screens.CREDITS.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 Credits()
             }

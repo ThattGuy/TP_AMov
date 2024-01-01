@@ -9,11 +9,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.utils.firebase.FAuthUtil
@@ -34,7 +36,7 @@ fun PointOfInterestItem(pointOfInterest: PointOfInterest,navController: NavContr
                 Button(onClick = {
                     //TODO
                 }) {
-                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.edit_point_of_interest))
+                    Text(text = stringResource(id = R.string.edit_point_of_interest))
                 }
             }
 
@@ -51,7 +53,7 @@ fun PointOfInterestItem(pointOfInterest: PointOfInterest,navController: NavContr
                     viewModel.userApprovesPointOfInterest(pointOfInterest,userId)
                     navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
                 }) {
-                    Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.approve))
+                    Text(text = stringResource(id = R.string.approve))
                 }
 
             }
@@ -64,7 +66,7 @@ fun PointOfInterestItem(pointOfInterest: PointOfInterest,navController: NavContr
 
 @Composable
 fun ListPointsOfInterest(modifier: Modifier = Modifier, viewModel: LocationViewModel, navController: NavController) {
-    val listaTetse  = viewModel.getPointsOfInterest()
+    val listaTetse  = viewModel.nearbyPOIs.observeAsState()
    /* for(i in 1..100)
     {
         listaTetse.add(PointOfInterest("${i}º Point"))
@@ -78,14 +80,14 @@ Column(
 
 
     Button(onClick = { navController.navigate(Screens.REGISTER_POINT_OF_INTEREST.route) }) {
-        Text(text = stringResource(id = pt.isec.amov.tp.eguide.R.string.register_point_of_interest))
+        Text(text = stringResource(id = R.string.register_point_of_interest))
     }
     LazyColumn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        items(listaTetse) { pointOfIterest ->
+        items(listaTetse.value!!) { pointOfIterest ->
             PointOfInterestItem(pointOfInterest = pointOfIterest,navController = navController,viewModel = viewModel)
         }
     }

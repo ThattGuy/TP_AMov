@@ -37,6 +37,8 @@
     <string name="edit_point_of_interest">Editar</string>
     <string name="portuguese">Português</string>
     <string name="english">Inglês</string>
+    <string name="register_location">Register Location</string>
+    <string name="choose_what_to_register">Choose what to register</string>
 
 </resources>
 

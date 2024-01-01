@@ -1,6 +1,7 @@
 package pt.isec.amov.tp.eguide.ui.screens
 
 import android.preference.PreferenceManager
+import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,17 +57,16 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
+import pt.isec.amov.tp.eguide.ui.viewmodels.Coordinates
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
-    //val context = LocalContext.current
-
+fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navController: NavHostController) {
     var autoEnabled by remember { mutableStateOf(false) }
-
     val location = viewModel.currentLocation.observeAsState()
+    val nearbyPois = viewModel.nearbyPOIs.observeAsState()
 
     var geoPoint by remember {
         mutableStateOf(
@@ -79,16 +79,11 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
     val context = LocalContext.current
 
     DisposableEffect(Unit) {
-        // Accessing the context within the DisposableEffect
-
         Configuration.getInstance().load(
             context,
-            androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+            PreferenceManager.getDefaultSharedPreferences(context)
         )
-
-        onDispose {
-            // Cleanup if necessary
-        }
+        onDispose { }
     }
 
     if (autoEnabled)
@@ -97,6 +92,12 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
                 location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0
             )
         }
+
+    fun navigateToCreatePOIScreen(selectedGeoPoint: GeoPoint) {
+        val locationString = "${selectedGeoPoint.latitude},${selectedGeoPoint.longitude}"
+        navController.navigate("${Screens.CHOOSEWHATTOREGISTER.route}/$locationString")
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -105,15 +106,12 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Lat: ${location.value?.latitude ?: "--"}")
-            Switch(checked = autoEnabled, onCheckedChange = {
-                autoEnabled = it
-            })
+            Switch(checked = autoEnabled, onCheckedChange = { autoEnabled = it })
             Text(text = "Lon: ${location.value?.longitude ?: "--"}")
         }
         Spacer(Modifier.height(16.dp))
@@ -129,18 +127,36 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
             AndroidView(
                 factory = { context ->
                     MapView(context).apply {
-                        setTileSource(TileSourceFactory.MAPNIK);//==TileSourceFactory.DEFAULT_TILE_SOURCE
+                        setTileSource(TileSourceFactory.MAPNIK)
                         setMultiTouchControls(true)
                         controller.setCenter(geoPoint)
                         controller.setZoom(18.0)
-                        for (poi in viewModel.POIs)
+
+                        // Add markers for nearby POIs
+                        nearbyPois.value?.forEach { poi ->
+                            val latLong = poi.coordinates!!.split(",").map { it.toDouble() }
+                            val lat = latLong[0]
+                            val lon = latLong[1]
+                            val poiGeoPoint = GeoPoint(lat, lon)
                             overlays.add(
                                 Marker(this).apply {
-                                    position = GeoPoint(poi.latitude, poi.longitude)
+                                    position = poiGeoPoint
                                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                                    title = poi.team
+                                    title = poi.name
                                 }
                             )
+                        }
+
+                        // Add touch listener for location selection
+                        overlayManager.add(object : Overlay() {
+                            override fun onSingleTapConfirmed(e: MotionEvent?, mapView: MapView?): Boolean {
+                                e?.let {
+                                    val selectedGeoPoint = mapView?.projection?.fromPixels(e.x.toInt(), e.y.toInt()) as GeoPoint
+                                    navigateToCreatePOIScreen(selectedGeoPoint)
+                                }
+                                return true
+                            }
+                        })
                     }
                 },
                 update = { view ->
@@ -151,20 +167,20 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
 
         Spacer(Modifier.height(16.dp))
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(viewModel.POIs) {
+            items(nearbyPois.value ?: listOf()) { poi ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     elevation = CardDefaults.cardElevation(4.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(128,192,255)
-                    ),
+                    colors = CardDefaults.cardColors(containerColor = Color(128, 192, 255)),
                     onClick = {
-                        geoPoint = GeoPoint(it.latitude, it.longitude)
+                        val latLong = poi.coordinates!!.split(",").map { it.toDouble() }
+                        val lat = latLong[0]
+                        val lon = latLong[1]
+                        val poiGeoPoint = GeoPoint(lat, lon)
                     }
                 ) {
                     Column(
@@ -173,14 +189,15 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel) {
                             .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = it.team, fontSize = 20.sp)
-                        Text(text = "${it.latitude} ${it.longitude}", fontSize = 14.sp)
+                        poi.name?.let { Text(text = it, fontSize = 20.sp) }
+                        val latLong = poi.coordinates!!.split(",").map { it.toDouble() }
+                        val lat = latLong[0]
+                        val lon = latLong[1]
+                        val poiGeoPoint = GeoPoint(lat, lon)
+                        Text(text = "${lat}, ${lon}", fontSize = 14.sp)
                     }
                 }
             }
         }
     }
-
 }
-
-

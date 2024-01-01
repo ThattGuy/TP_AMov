@@ -8,99 +8,82 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
-
+import kotlin.math.pow
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
-class LocationViewModelFactory(private val locationHandler: LocationHandler)
-    :ViewModelProvider.Factory{
-    override fun<T :ViewModel>create(modelClass:Class<T>):T{
+
+class LocationViewModelFactory(private val locationHandler: LocationHandler) :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return LocationViewModel(locationHandler)as T
+        return LocationViewModel(locationHandler) as T
     }
 }
 
-data class Coordinates(val team:String, val latitude :Double, val longitude:Double)
+data class Coordinates(val team: String, val latitude: Double, val longitude: Double)
 
-class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel(){
+class LocationViewModel(private val locationHandler: LocationHandler) : ViewModel() {
 
-    var locationSelected : pt.isec.amov.tp.eguide.data.Location? = null // Location selecionado na lista de locais
+    var locationSelected: pt.isec.amov.tp.eguide.data.Location? =
+        null // Location selecionado na lista de locais
     val isLogged = MutableLiveData(false)
-    val POIs=listOf(
-        Coordinates("Liverpool",53.430819,-2.960828)
-    )
+    val nearbyPOIs = MutableLiveData<List<PointOfInterest>>(ArrayList())
+    val nearbyCategories = MutableLiveData<List<Category>>(ArrayList())
+    val nearbyLocations = MutableLiveData<List<String>>(ArrayList())
+
     // Permissions
-    var coarseLocationPermission=false
-    var fineLocationPermission=false
-    var backgroundLocationPermission=false
+    var coarseLocationPermission = false
+    var fineLocationPermission = false
+    var backgroundLocationPermission = false
 
-     val _currentLocation=MutableLiveData(Location(null))
-    val currentLocation:LiveData<Location>
-        get()=_currentLocation
+    val _currentLocation = MutableLiveData(Location(null))
+    val currentLocation: LiveData<Location>
+        get() = _currentLocation
 
-    private val locationEnabled:Boolean
-        get()=locationHandler.locationEnabled
+    private val locationEnabled: Boolean
+        get() = locationHandler.locationEnabled
 
-    init{
-        locationHandler.onLocation={location->
-            _currentLocation.value=location
+    init {
+        locationHandler.onLocation = { location ->
+            _currentLocation.value = location
         }
+
+        FStorageUtil.startObserver { nearbyPOIs.value = nearbyPOIs.value?.plus(it) }
     }
 
-    fun startLocationUpdates(){
-        if(fineLocationPermission&&coarseLocationPermission){
+    fun startLocationUpdates() {
+        if (fineLocationPermission && coarseLocationPermission) {
             locationHandler.startLocationUpdates()
         }
     }
 
-    fun stopLocationUpdates(){
+    fun stopLocationUpdates() {
         locationHandler.stopLocationUpdates()
     }
 
-    override fun onCleared(){
+    override fun onCleared() {
         super.onCleared()
         stopLocationUpdates()
     }
 
-    fun insertCategoryIntoDB(categoryName : String, categoryDescription : String){
-       FStorageUtil.insertCategoryIntoDB(categoryName,categoryDescription)
+    fun insertCategoryIntoDB(categoryName: String, categoryDescription: String) {
+        FStorageUtil.insertCategoryIntoDB(categoryName, categoryDescription)
     }
 
-   fun insertLocationIntoDB(name : String,description: String,coordinates: String){
+    fun insertLocationIntoDB(name: String, description: String, coordinates: String) {
 
-       //val location = extrairString(this._currentLocation.value.toString())
+        //val location = extrairString(this._currentLocation.value.toString())
 
-       //print("\n\n\n\n localização: " +location)
-       FStorageUtil.insertLocationIntoDB(name,description,coordinates)
-
-   }
-
-    //var lista = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
-    @SuppressLint("SuspiciousIndentation")
-    fun getLocations() : ArrayList<pt.isec.amov.tp.eguide.data.Location>
-    {
-        var listaToReturn = ArrayList<pt.isec.amov.tp.eguide.data.Location>()
-
-
-            runBlocking {
-                //FStorageUtil.fetchLocations {locations ->  listaToReturn = locations }
-                listaToReturn = FStorageUtil.provideLocations()
-            }
-
-
-        return listaToReturn
-
-            // Faça algo com a lista de locais
-
-        //Thread.sleep(2000)
-        //return lista
+        //print("\n\n\n\n localização: " +location)
+        FStorageUtil.insertLocationIntoDB(name, description, coordinates)
 
     }
 
-
-     fun extrairString(str: String): String? {
+    fun extrairString(str: String): String? {
         val regex = Regex("fused\\s(.*?)\\shAcc")
         val matchResult = regex.find(str)
 
@@ -111,28 +94,18 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         name: String,
         description: String,
         coordinates: String,
-        category : String
+        category: String
     ) {
 
-        FStorageUtil.insertPointOfInterest(name,description,coordinates,this.locationSelected,category)
+        FStorageUtil.insertPointOfInterest(
+            name,
+            description,
+            coordinates,
+            this.locationSelected,
+            category
+        )
     }
 
-    fun getPointsOfInterest() : ArrayList<PointOfInterest> {
-
-        var listaToReturn = ArrayList<PointOfInterest>()
-        runBlocking {
-            listaToReturn = FStorageUtil.providePointsOfInterest(locationSelected?.name)
-        }
-        return listaToReturn
-    }
-
-    fun getCategoriesList(): ArrayList<Category> {
-        var listToReturn = ArrayList<Category>()
-        runBlocking {
-           listToReturn = FStorageUtil.provideCategories()
-        }
-        return listToReturn
-    }
 
     fun userApprovesLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String) {
         runBlocking {
@@ -140,7 +113,7 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         }
     }
 
-    fun getApprovalsOfLocation(location: pt.isec.amov.tp.eguide.data.Location): ArrayList<String>{
+    fun getApprovalsOfLocation(location: pt.isec.amov.tp.eguide.data.Location): ArrayList<String> {
         var toReturn = ArrayList<String>()
         runBlocking {
             toReturn = FStorageUtil.getApprovalsOfLocation(location)
@@ -176,5 +149,25 @@ class LocationViewModel(private val locationHandler: LocationHandler) :ViewModel
         return toReturn
     }
 
+    private val NEARBY_THRESHOLD_METERS = 5000
+
+    fun isPOINearCurrentLocation(poi: Coordinates, currentLocation: GeoPoint): Boolean {
+        val poiLocation = GeoPoint(poi.latitude, poi.longitude)
+        return true
+    }
+
+    private fun calculateDistance(startPoint: GeoPoint, endPoint: GeoPoint): Double {
+        val earthRadius = 6371000.0 // meters
+
+        val dLat = Math.toRadians(endPoint.latitude - startPoint.latitude)
+        val dLon = Math.toRadians(endPoint.longitude - startPoint.longitude)
+
+        val a = Math.sin(dLat / 2).pow(2) +
+                Math.cos(Math.toRadians(startPoint.latitude)) * Math.cos(Math.toRadians(endPoint.latitude)) *
+                Math.sin(dLon / 2).pow(2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return earthRadius * c
+    }
 
 }

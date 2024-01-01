@@ -143,7 +143,7 @@ fun Layout_Bars(
                         navController.navigate(Screens.PROFILE.route)
                         navController.navigate(Screens.PROFILE.route)
                         navController.navigate("My Contributions")
-                        navController.navigate(Screens.Credits.route)
+                        navController.navigate(Screens.CREDITS.route)
                     }
                 }
 
@@ -303,15 +303,9 @@ fun ProfileMenu(
                 onDismiss()
             })
             Spacer(Modifier.height(16.dp))
-            Text("Languages", Modifier.clickable {
-                // Navigate to Languages screen
-                navController.navigate("languagesRoute")
-                onDismiss()
-            })
-            Spacer(Modifier.height(16.dp))
             Text("Credits", Modifier.clickable {
                 // Navigate to Credits screen
-                navController.navigate(Screens.Credits.route)
+                navController.navigate(Screens.CREDITS.route)
                 onDismiss()
             })
             Spacer(Modifier.height(30.dp))

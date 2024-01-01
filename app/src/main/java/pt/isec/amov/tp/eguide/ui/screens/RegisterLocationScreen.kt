@@ -14,12 +14,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateLocationScreen(viewModel: LocationViewModel) {
+fun RegisterLocationScreen(viewModel: LocationViewModel, navController: NavController) {
 
 
     var description by rememberSaveable { mutableStateOf("") }
@@ -28,13 +29,15 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
     var coordinates by rememberSaveable {
         mutableStateOf("")
     }
+
+    coordinates = navController.currentBackStackEntry?.arguments?.getString("coordinates") ?: ""
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextField(value = name, onValueChange = {name = it}, placeholder = { Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.name))})
-        TextField(value = description, onValueChange = {description = it}, placeholder = { Text(text = "Descrição")})
+        TextField(value = description, onValueChange = {description = it}, placeholder = { Text(text = "Descript")})
         TextField(value = coordinates, onValueChange = {coordinates = it},label = { Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.coordinates))})
         Button(onClick = { coordinates =  viewModel.extrairString(viewModel.currentLocation.value.toString())!!}) {
             Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.get_coordinates))
@@ -45,20 +48,12 @@ fun CreateLocationScreen(viewModel: LocationViewModel) {
         }
 
         Button(onClick = {
-            print("\n\n\n Vim aquiii")
             location = viewModel._currentLocation.value.toString()
             viewModel.insertLocationIntoDB(name,description,coordinates)
-
-
+            navController.navigate(Screens.LIST_LOCATIONS.route)
         }){
             Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.save))
         }
-
-
-
     }
-
-
-
 
 }

@@ -44,19 +44,18 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
 
         FStorageUtil.startObserver(collectionName = "POI", onNewValues = { id, poi ->
             poi.name = id
-
-            pois.value = pois.value?.plus(poi)
+            pois.value = pois.value?.filter { it.name != id }?.plus(poi)
         }, objectType = PointOfInterest::class.java)
 
         FStorageUtil.startObserver(collectionName = "Categories", onNewValues = { id, category ->
             category.name = id
-            categories.value = categories.value?.plus(category)
+            categories.value = categories.value?.filter { it.name != id }?.plus(category)
         }, objectType = Category::class.java)
 
         FStorageUtil.startObserver(collectionName = "Locations", onNewValues = { id, location ->
             location.name = id
 
-            locations.value = locations.value?.plus(location)
+            locations.value = locations.value?.filter { it.name != id }?.plus(location)
         }, objectType = pt.isec.amov.tp.eguide.data.Location::class.java)
 
         selectedCategory.observeForever { refreshListPois() }
@@ -112,7 +111,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         categorySelected: String?,
         locationSelected: String?
     ) {
-
         FStorageUtil.editPointOfInterest(
             editPoiName!!,
             description,
@@ -121,7 +119,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
             categorySelected
         )
 
-        pois.value = emptyList<PointOfInterest>()
     }
 
     fun insertPOIImage(imageUri: Uri, imageName: String) {
@@ -158,7 +155,7 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     }
 
     fun approvePOI(poi: PointOfInterest, userId: String) {
-        FStorageUtil.insertApproval("Locations", poi.name!!, userId)
+        FStorageUtil.insertApproval("POI", poi.name!!, userId)
     }
 
     private fun orderPOIsByDistance(

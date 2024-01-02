@@ -114,7 +114,6 @@ fun ListPointsOfInterest(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-
         Button(onClick = { navController.navigate(Screens.REGISTER_POINT_OF_INTEREST.route) }) {
             Text(text = stringResource(id = R.string.register_point_of_interest))
         }

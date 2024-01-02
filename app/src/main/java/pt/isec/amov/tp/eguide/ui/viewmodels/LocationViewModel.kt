@@ -1,18 +1,16 @@
 package pt.isec.amov.tp.eguide.ui.viewmodels
 
-import android.annotation.SuppressLint
 import android.location.Location
-
-import androidx.lifecycle.LiveData
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.PointOfInterest
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
-import kotlin.math.pow
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
 
@@ -24,35 +22,46 @@ class LocationViewModelFactory(private val locationHandler: LocationHandler) :
     }
 }
 
-data class Coordinates(val team: String, val latitude: Double, val longitude: Double)
-
 class LocationViewModel(private val locationHandler: LocationHandler) : ViewModel() {
 
-    var locationSelected: pt.isec.amov.tp.eguide.data.Location? =
-        null // Location selecionado na lista de locais
-    val isLogged = MutableLiveData(false)
-    val nearbyPOIs = MutableLiveData<List<PointOfInterest>>(ArrayList())
-    val nearbyCategories = MutableLiveData<List<Category>>(ArrayList())
-    val nearbyLocations = MutableLiveData<List<String>>(ArrayList())
+    val pois = MutableLiveData<List<PointOfInterest>>(ArrayList())
+    var orderedPois = MutableLiveData<List<PointOfInterest>>(ArrayList())
+    val categories = MutableLiveData<List<Category>>(ArrayList())
+    val locations = MutableLiveData<List<pt.isec.amov.tp.eguide.data.Location>>(ArrayList())
+    val currentLocation = MutableLiveData(Location(null))
+    val mapBoundingBox = MutableLiveData(BoundingBox(0.0, 0.0, 0.0, 0.0))
 
     // Permissions
     var coarseLocationPermission = false
     var fineLocationPermission = false
     var backgroundLocationPermission = false
 
-    val _currentLocation = MutableLiveData(Location(null))
-    val currentLocation: LiveData<Location>
-        get() = _currentLocation
-
-    private val locationEnabled: Boolean
-        get() = locationHandler.locationEnabled
 
     init {
         locationHandler.onLocation = { location ->
-            _currentLocation.value = location
+            currentLocation.value = location
         }
 
-        FStorageUtil.startObserver { nearbyPOIs.value = nearbyPOIs.value?.plus(it) }
+        FStorageUtil.startObserver( collectionName = "POI", onNewValues = { id, poi ->
+            poi.name = id
+
+            pois.value = pois.value?.plus(poi)
+        }, objectType = PointOfInterest::class.java)
+
+        FStorageUtil.startObserver( collectionName = "Categories", onNewValues = { id, category ->
+            category.name = id
+            categories.value = categories.value?.plus(category)
+        }, objectType = Category::class.java)
+
+        FStorageUtil.startObserver( collectionName = "Locations", onNewValues = { id, location ->
+            location.name = id
+
+            locations.value = locations.value?.plus(location)
+        }, objectType = pt.isec.amov.tp.eguide.data.Location::class.java)
+    }
+
+    fun getCurrentCoordinates(): String {
+        return "${currentLocation.value?.latitude ?: 0.0},${currentLocation.value?.longitude ?: 0.0}"
     }
 
     fun startLocationUpdates() {
@@ -75,99 +84,80 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     }
 
     fun insertLocationIntoDB(name: String, description: String, coordinates: String) {
-
-        //val location = extrairString(this._currentLocation.value.toString())
-
-        //print("\n\n\n\n localização: " +location)
         FStorageUtil.insertLocationIntoDB(name, description, coordinates)
-
-    }
-
-    fun extrairString(str: String): String? {
-        val regex = Regex("fused\\s(.*?)\\shAcc")
-        val matchResult = regex.find(str)
-
-        return matchResult?.groups?.get(1)?.value
     }
 
     fun insertPointOfInterest(
         name: String,
         description: String,
         coordinates: String,
-        category: String
+        category: String,
+        location: String,
     ) {
-
         FStorageUtil.insertPointOfInterest(
             name,
             description,
             coordinates,
-            this.locationSelected,
+            location,
             category
         )
     }
 
-
-    fun userApprovesLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String) {
-        runBlocking {
-            FStorageUtil.userApprovesLocation(location, userId)
-        }
+    fun insertPOIImage(imageUri: Uri, imageName: String) {
+        FStorageUtil.uploadImage(imageUri, "POI", imageName)
     }
 
-    fun getApprovalsOfLocation(location: pt.isec.amov.tp.eguide.data.Location): ArrayList<String> {
-        var toReturn = ArrayList<String>()
-        runBlocking {
-            toReturn = FStorageUtil.getApprovalsOfLocation(location)
-        }
-        return toReturn
+    fun insertCategoryImage(imageUri: Uri, imageName: String) {
+        FStorageUtil.uploadImage(imageUri, "Categories", imageName)
     }
 
-    fun userApprovesPointOfInterest(pointOfInterest: PointOfInterest, userId: String) {
-        runBlocking {
-            FStorageUtil.userApprovesPointOfInterest(pointOfInterest, userId)
-        }
+    fun insertLocationImages(imageUri: Uri, imageName: String) {
+        FStorageUtil.uploadImage(imageUri, "Locations", imageName)
     }
 
-    fun getApprovalsOfPointOfInterest(pointOfInterest: PointOfInterest): ArrayList<String> {
-        var toReturn = ArrayList<String>()
-        runBlocking {
-            toReturn = FStorageUtil.getApprovalsOfPointOfInterest(pointOfInterest)
-        }
-        return toReturn
+    fun getPOIImage(imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(imageName, "POI", onResult)
     }
 
-    fun userApprovesCategory(category: Category, userId: String) {
-        runBlocking {
-            FStorageUtil.userApprovesCategory(category, userId)
-        }
+    fun getCategoryImage(imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(imageName, "Categories", onResult)
     }
 
-    fun getApprovalsOfCategory(category: Category): ArrayList<String> {
-        var toReturn = ArrayList<String>()
-        runBlocking {
-            toReturn = FStorageUtil.getApprovalsOfCategory(category)
-        }
-        return toReturn
+    fun getLocationImage(imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(imageName, "Locations", onResult)
     }
 
-    private val NEARBY_THRESHOLD_METERS = 5000
-
-    fun isPOINearCurrentLocation(poi: Coordinates, currentLocation: GeoPoint): Boolean {
-        val poiLocation = GeoPoint(poi.latitude, poi.longitude)
-        return true
+    fun approveCategory(category: Category, userId: String ) {
+        FStorageUtil.insertApproval("Categories", category.name!!, userId)
     }
 
-    private fun calculateDistance(startPoint: GeoPoint, endPoint: GeoPoint): Double {
-        val earthRadius = 6371000.0 // meters
 
-        val dLat = Math.toRadians(endPoint.latitude - startPoint.latitude)
-        val dLon = Math.toRadians(endPoint.longitude - startPoint.longitude)
-
-        val a = Math.sin(dLat / 2).pow(2) +
-                Math.cos(Math.toRadians(startPoint.latitude)) * Math.cos(Math.toRadians(endPoint.latitude)) *
-                Math.sin(dLon / 2).pow(2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return earthRadius * c
+    fun approveLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String ) {
+        FStorageUtil.insertApproval("Locations", location.name!!, userId)
     }
+
+    fun approvePOI(poi: PointOfInterest, userId: String ) {
+        FStorageUtil.insertApproval("Locations", poi.name!!, userId)
+    }
+
+    private fun orderPOIsByDistance(pois: List<PointOfInterest>, otherPoint: GeoPoint): List<PointOfInterest> {
+        return pois.map { poi ->
+            val poiGeoPoint = poi.toGeoPoint()
+            val distance = poiGeoPoint.distanceToAsDouble(otherPoint)
+            Pair(poi, distance)
+        }.sortedBy { it.second } // Sort by distance
+            .map { it.first } // Extract the sorted POIs
+    }
+
+    fun refreshVisiblePois(): List<PointOfInterest> {
+        val visiblePois = pois.value!!.filter { mapBoundingBox.value!!.contains(it.toGeoPoint()) }
+        val sortedPois = orderPOIsByDistance(visiblePois, mapBoundingBox.value!!.centerWithDateLine)
+
+        orderedPois.value = sortedPois
+
+        return visiblePois
+    }
+
+
 
 }

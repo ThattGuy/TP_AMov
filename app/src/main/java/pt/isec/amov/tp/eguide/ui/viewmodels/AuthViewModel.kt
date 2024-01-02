@@ -67,7 +67,7 @@ class AuthViewModel : ViewModel() {
         }
 
         // Basic email format check
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _error.value = R.string.invalid_email_error.toString()
             return
         }

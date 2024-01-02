@@ -36,4 +36,10 @@
     <string name="english">English</string>
     <string name="register_location">Register Location</string>
     <string name="choose_what_to_register">Choose what to register</string>
+    <string name="name_is_required">Name is required</string>
+    <string name="category_is_required">Category is Required</string>
+    <string name="location_is_required">Location is required</string>
+    <string name="fill_all_fields">You need to fill of the the fills to register</string>
+    <string name="description_is_required">Description is required</string>
+    <string name="coordinates_is_required">Coordinates are required</string>
 </resources>

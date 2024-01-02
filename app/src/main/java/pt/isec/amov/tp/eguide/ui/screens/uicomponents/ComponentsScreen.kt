@@ -194,7 +194,7 @@ fun OverlayMenu(
                     colors = buttonColors
                 ) {
                     Text(
-                        stringResource(id = pt.isec.amov.tp.eguide.R.string.home),
+                        stringResource(id = R.string.home),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -204,7 +204,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.locations),
+                    Text( stringResource(id = R.string.locations),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -214,7 +214,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.points_of_interest),
+                    Text( stringResource(id = R.string.points_of_interest),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -224,7 +224,7 @@ fun OverlayMenu(
                     modifier = buttonModifier,
                     colors = buttonColors
                 ) {
-                    Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.categories),
+                    Text( stringResource(id = R.string.categories),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }

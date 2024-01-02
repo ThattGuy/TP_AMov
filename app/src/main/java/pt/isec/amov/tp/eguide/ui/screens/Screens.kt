@@ -18,5 +18,5 @@ enum class Screens(display: String) {
 
 
     val route : String
-        get() = this.toString();
+        get() = this.toString()
 }

@@ -82,7 +82,7 @@ fun SetupNavGraph(navController: NavHostController,
         }
         composable(Screens.REGISTER_CATEGORY.route){
             Layout_Bars(viewModel = authViewModel, navController = navController) {
-                RegisterCategory(locationViewModel)
+                RegisterCategory(locationViewModel, navController = navController)
             }
         }
         composable(Screens.REGISTER_POINT_OF_INTEREST.route){

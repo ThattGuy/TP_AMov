@@ -53,7 +53,6 @@ class FAuthUtil {
                         onResult(task.exception)
                         return@addOnCompleteListener
                     }
-
                     //todo: update email
                 }
         }

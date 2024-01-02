@@ -17,7 +17,4 @@ class EGuide : Application() {
         FusedLocationHandler(locationProvider)
     }
 
-    override fun onCreate() {
-        super.onCreate()
-    }
 }

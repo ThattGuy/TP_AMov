@@ -45,6 +45,11 @@
     <string name="fill_all_fields">You need to fill of the the fills to register</string>
     <string name="description_is_required">Description is required</string>
     <string name="coordinates_is_required">Coordinates are required</string>
+    <string name="select_location">Select a location</string>
+    <string name="select_category">Select a category</string>
+    <string name="poi_image">Image</string>
+    <string name="location_image">Location Image</string>
+    <string name="category_image">Category image</string>
 
 </resources>
 

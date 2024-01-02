@@ -1,4 +1,4 @@
-package pt.isec.amov.tp.eguide.ui.screens.auth
+package pt.isec.amov.tp.eguide.ui.screens.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

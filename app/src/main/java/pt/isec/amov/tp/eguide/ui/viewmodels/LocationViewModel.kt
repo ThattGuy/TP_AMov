@@ -37,7 +37,6 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     var fineLocationPermission = false
     var backgroundLocationPermission = false
 
-
     init {
         locationHandler.onLocation = { location ->
             currentLocation.value = location
@@ -173,7 +172,5 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
             listPois.value = refreshVisiblePois()
         }
     }
-
-
 
 }

@@ -76,7 +76,7 @@ class FStorageUtil {
                 "Dislikes" to 0
             )
             db.collection("POI").document(name).set(data)
-                .addOnCompleteListener { result ->
+                .addOnCompleteListener {
                     Log.e("Firestore", "Point of interest added")
                 }
         }

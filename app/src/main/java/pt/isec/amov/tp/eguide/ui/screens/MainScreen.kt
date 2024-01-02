@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -27,6 +28,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -43,6 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -53,6 +57,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
+import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -184,55 +189,75 @@ fun MainScreen(
         }
 
         Spacer(Modifier.height(16.dp))
-        Column {
-            OutlinedButton(onClick = { expandedLocation = true }) {
-                Text(text = viewModel.selectedLocation.value ?: "Select a category")
-            }
-            DropdownMenu(
-                expanded = expandedLocation,
-                onDismissRequest = { expandedLocation = false }
-            ) {
-                locations.value.forEach { option ->
-                    DropdownMenuItem(onClick = {
-                        viewModel.selectedLocation.value = option.name
-                        expandedLocation = false
-                    }, text = { Text(text = option.name!!) })
-                }
-            }
-            Button(onClick = {
-                viewModel.selectedLocation.value = null
-                expandedLocation = false
-            }) {
-                Icon(imageVector = Icons.Default.Clear, contentDescription = "")
-            }
-
-        }
-        Divider()
-        Column {
-            OutlinedButton(onClick = { expandedCategories = true }) {
-                Text(text = viewModel.selectedCategory.value ?: "Select a location")
-            }
-            DropdownMenu(
-                expanded = expandedCategories,
-                onDismissRequest = { expandedCategories = false }
-            ) {
-                categories.value.forEach { option ->
-                    DropdownMenuItem(onClick = {
-                        viewModel.selectedCategory.value = option.name
-                        expandedCategories = false
-                    }, text = { Text(text = option.name!!) })
-                }
-            }
-            Button(onClick = {
-                viewModel.selectedCategory.value = null
-                expandedCategories = false
-            }) {
-                Icon(imageVector = Icons.Default.Clear, contentDescription = "")
-            }
-
-        }
         Divider()
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box {
+                OutlinedButton(
+                    modifier = Modifier
+                        .padding(end = 4.dp),
+                    onClick = { expandedLocation = true }
+                ) {
+                    Text(text = viewModel.selectedLocation.value ?: stringResource(id = R.string.select_location))
+                }
+                DropdownMenu(
+                    expanded = expandedLocation,
+                    onDismissRequest = { expandedLocation = false },
+                    offset = DpOffset(x = 0.dp, y = 0.dp)
+                ) {
+
+                    locations.value.forEach { option ->
+                        DropdownMenuItem(onClick = {
+                            viewModel.selectedLocation.value = option.name
+                            expandedLocation = false
+                            geoPoint = option.toGeoPoint()
+                            goToPoint = true
+                        }, text = { Text(text = option.name!!) })
+                    }
+                }
+            }
+
+            if(viewModel.selectedCategory.value != null || viewModel.selectedLocation.value != null)
+            {
+                IconButton(onClick = {
+                    viewModel.selectedCategory.value = null
+                    viewModel.selectedLocation.value = null
+                }) {
+                    Icon(Icons.Default.Clear, contentDescription = "")
+                }
+            }
+
+
+            Box {
+                OutlinedButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    onClick = { expandedCategories = true }
+                ) {
+                    Text(text = viewModel.selectedCategory.value ?: stringResource(id = R.string.select_category))
+                }
+                DropdownMenu(
+                    expanded = expandedCategories,
+                    onDismissRequest = { expandedCategories = false },
+                    offset = DpOffset(x = 0.dp, y = 0.dp)
+                ) {
+                    categories.value.forEach { option ->
+                        DropdownMenuItem(onClick = {
+                            viewModel.selectedCategory.value = option.name
+                            expandedCategories = false
+                        }, text = { Text(text = option.name!!) })
+                    }
+                }
+            }
+        }
+
+        Divider()
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {

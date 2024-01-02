@@ -1,4 +1,4 @@
-package pt.isec.amov.tp.eguide.ui.screens
+package pt.isec.amov.tp.eguide.ui.screens.category
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 import pt.isec.amov.tp.eguide.R
+import pt.isec.amov.tp.eguide.ui.screens.Screens
 
 
 @Composable

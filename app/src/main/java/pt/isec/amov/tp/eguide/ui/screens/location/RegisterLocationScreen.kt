@@ -1,4 +1,4 @@
-package pt.isec.amov.tp.eguide.ui.screens
+package pt.isec.amov.tp.eguide.ui.screens.location
 
 
 import android.net.Uri
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import pt.isec.amov.tp.eguide.R
+import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
 

@@ -10,7 +10,13 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
+import pt.isec.amov.tp.eguide.data.Category
+import pt.isec.amov.tp.eguide.data.Location
+import pt.isec.amov.tp.eguide.data.PointOfInterest
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 
 class FStorageUtil {
     companion object {
@@ -234,6 +240,7 @@ class FStorageUtil {
                     )
             }
         }
+
 
     }
 }

@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.runBlocking
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp.eguide.data.Category
@@ -25,10 +24,12 @@ class LocationViewModelFactory(private val locationHandler: LocationHandler) :
 class LocationViewModel(private val locationHandler: LocationHandler) : ViewModel() {
 
     val pois = MutableLiveData<List<PointOfInterest>>(ArrayList())
-    var orderedPois = MutableLiveData<List<PointOfInterest>>(ArrayList())
     val categories = MutableLiveData<List<Category>>(ArrayList())
+    val listPois = MutableLiveData<List<PointOfInterest>>(ArrayList())
     val locations = MutableLiveData<List<pt.isec.amov.tp.eguide.data.Location>>(ArrayList())
     val currentLocation = MutableLiveData(Location(null))
+    var selectedCategory = MutableLiveData<String?>(null)
+    var selectedLocation = MutableLiveData<String?>(null)
     val mapBoundingBox = MutableLiveData(BoundingBox(0.0, 0.0, 0.0, 0.0))
 
     // Permissions
@@ -58,6 +59,9 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
 
             locations.value = locations.value?.plus(location)
         }, objectType = pt.isec.amov.tp.eguide.data.Location::class.java)
+
+        selectedCategory.observeForever { refreshListPois() }
+        selectedLocation.observeForever { refreshListPois() }
     }
 
     fun getCurrentCoordinates(): String {
@@ -151,11 +155,23 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
 
     fun refreshVisiblePois(): List<PointOfInterest> {
         val visiblePois = pois.value!!.filter { mapBoundingBox.value!!.contains(it.toGeoPoint()) }
-        val sortedPois = orderPOIsByDistance(visiblePois, mapBoundingBox.value!!.centerWithDateLine)
 
-        orderedPois.value = sortedPois
+        return orderPOIsByDistance(visiblePois, mapBoundingBox.value!!.centerWithDateLine)
+    }
 
-        return visiblePois
+    fun refreshListPois() {
+        if(selectedCategory.value != null && selectedLocation.value != null) {
+            listPois.value = pois.value!!.filter { it.category == selectedCategory.value && it.location == selectedLocation.value }
+        }
+        else if(selectedCategory.value != null) {
+            listPois.value = pois.value!!.filter { it.category == selectedCategory.value }
+        }
+        else if(selectedLocation.value != null) {
+            listPois.value = pois.value!!.filter { it.location == selectedLocation.value }
+        }
+        else {
+            listPois.value = refreshVisiblePois()
+        }
     }
 
 

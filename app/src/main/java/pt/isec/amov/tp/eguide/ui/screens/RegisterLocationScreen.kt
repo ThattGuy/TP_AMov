@@ -55,7 +55,7 @@ fun RegisterLocationScreen(viewModel: LocationViewModel, navController: NavContr
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TextField(value = name, onValueChange = {name = it}, placeholder = { Text( stringResource(id = pt.isec.amov.tp.eguide.R.string.name))})
+        TextField(value = name, onValueChange = {name = it}, placeholder = { Text( stringResource(id = R.string.name))})
         if (name.isBlank()) {
             Text(stringResource(id = R.string.name), color = Color.Red)
         }
@@ -63,9 +63,9 @@ fun RegisterLocationScreen(viewModel: LocationViewModel, navController: NavContr
         if (description.isBlank()) {
             Text(stringResource(id = R.string.description_is_required), color = Color.Red)
         }
-        TextField(value = coordinates, onValueChange = {coordinates = it},label = { Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.coordinates))})
+        TextField(value = coordinates, onValueChange = {coordinates = it},label = { Text(stringResource(id = R.string.coordinates))})
         Button(onClick = { coordinates = viewModel.getCurrentCoordinates()}) {
-            Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.get_coordinates))
+            Text(stringResource(id = R.string.get_coordinates))
         }
         if (coordinates.isBlank()) {
             Text(stringResource(id = R.string.coordinates_is_required), color = Color.Red)
@@ -89,7 +89,7 @@ fun RegisterLocationScreen(viewModel: LocationViewModel, navController: NavContr
             viewModel.insertLocationImages(imageUri!!, name)
             navController.navigate(Screens.LIST_LOCATIONS.route)
         }, enabled = isFormValid) {
-            Text(stringResource(id = pt.isec.amov.tp.eguide.R.string.save))
+            Text(stringResource(id = R.string.save))
         }
 
         if (!isFormValid) {

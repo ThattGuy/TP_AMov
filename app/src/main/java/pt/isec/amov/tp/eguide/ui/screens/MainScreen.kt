@@ -15,8 +15,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,14 +55,23 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
 import pt.isec.amov.tp.eguide.ui.viewmodels.LocationViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navController: NavHostController) {
-    var autoEnabled by remember { mutableStateOf(false) }
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LocationViewModel,
+    navController: NavHostController
+) {
     val location = viewModel.currentLocation.observeAsState()
-    val orderedPois = viewModel.orderedPois.observeAsState(initial = listOf())
+    val listPois = viewModel.listPois.observeAsState(initial = listOf())
+    var expandedLocation by remember { mutableStateOf(false) }
+    var expandedCategories by remember { mutableStateOf(false) }
+    val categories = viewModel.categories.observeAsState(initial = listOf())
+    val locations = viewModel.locations.observeAsState(initial = listOf())
+    var goToPoint by remember { mutableStateOf(false) }
 
     var geoPoint by remember {
-        mutableStateOf(
+        mutableStateOf<GeoPoint?>(
             GeoPoint(
                 location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0
             )
@@ -67,13 +87,6 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
         )
         onDispose { }
     }
-
-    if (autoEnabled)
-        LaunchedEffect(key1 = location.value) {
-            geoPoint = GeoPoint(
-                location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0
-            )
-        }
 
     fun navigateToCreatePOIScreen(selectedGeoPoint: GeoPoint) {
         val locationString = "${selectedGeoPoint.latitude},${selectedGeoPoint.longitude}"
@@ -93,7 +106,15 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Lat: ${location.value?.latitude ?: "--"}")
-            Switch(checked = autoEnabled, onCheckedChange = { autoEnabled = it })
+            Button(
+                shape = CircleShape,
+                onClick = {
+                    goToPoint = true
+                    geoPoint =
+                        GeoPoint(location.value?.latitude ?: 0.0, location.value?.longitude ?: 0.0)
+                }) {
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription = "")
+            }
             Text(text = "Lon: ${location.value?.longitude ?: "--"}")
         }
         Spacer(Modifier.height(16.dp))
@@ -120,6 +141,15 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
                     viewModel.mapBoundingBox.value = view.boundingBox
                     view.overlays.clear()
 
+                    if (goToPoint) {
+                        view.controller.setCenter(geoPoint)
+                        goToPoint = false
+                    }
+
+                    if (viewModel.selectedCategory.value == null && viewModel.selectedLocation.value == null) {
+                        viewModel.refreshListPois()
+                    }
+
                     val poiMarkers = viewModel.refreshVisiblePois()
 
                     // Add markers for nearby POIs
@@ -134,10 +164,16 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
                         )
                     }
 
-                   view.overlayManager.add(object : Overlay() {
-                        override fun onSingleTapConfirmed(e: MotionEvent?, mapView: MapView?): Boolean {
+                    view.overlayManager.add(object : Overlay() {
+                        override fun onSingleTapConfirmed(
+                            e: MotionEvent?,
+                            mapView: MapView?
+                        ): Boolean {
                             e?.let {
-                                val selectedGeoPoint = mapView?.projection?.fromPixels(e.x.toInt(), e.y.toInt()) as GeoPoint
+                                val selectedGeoPoint = mapView?.projection?.fromPixels(
+                                    e.x.toInt(),
+                                    e.y.toInt()
+                                ) as GeoPoint
                                 navigateToCreatePOIScreen(selectedGeoPoint)
                             }
                             return true
@@ -148,16 +184,69 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
         }
 
         Spacer(Modifier.height(16.dp))
+        Column {
+            OutlinedButton(onClick = { expandedLocation = true }) {
+                Text(text = viewModel.selectedLocation.value ?: "Select a category")
+            }
+            DropdownMenu(
+                expanded = expandedLocation,
+                onDismissRequest = { expandedLocation = false }
+            ) {
+                locations.value.forEach { option ->
+                    DropdownMenuItem(onClick = {
+                        viewModel.selectedLocation.value = option.name
+                        expandedLocation = false
+                    }, text = { Text(text = option.name!!) })
+                }
+            }
+            Button(onClick = {
+                viewModel.selectedLocation.value = null
+                expandedLocation = false
+            }) {
+                Icon(imageVector = Icons.Default.Clear, contentDescription = "")
+            }
+
+        }
+        Divider()
+        Column {
+            OutlinedButton(onClick = { expandedCategories = true }) {
+                Text(text = viewModel.selectedCategory.value ?: "Select a location")
+            }
+            DropdownMenu(
+                expanded = expandedCategories,
+                onDismissRequest = { expandedCategories = false }
+            ) {
+                categories.value.forEach { option ->
+                    DropdownMenuItem(onClick = {
+                        viewModel.selectedCategory.value = option.name
+                        expandedCategories = false
+                    }, text = { Text(text = option.name!!) })
+                }
+            }
+            Button(onClick = {
+                viewModel.selectedCategory.value = null
+                expandedCategories = false
+            }) {
+                Icon(imageVector = Icons.Default.Clear, contentDescription = "")
+            }
+
+        }
+        Divider()
+
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(orderedPois.value ?: listOf()) { poi ->
+            items(listPois.value ?: listOf()) { poi ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     elevation = CardDefaults.cardElevation(4.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(128, 192, 255)),
+                    onClick = {
+                        goToPoint = true
+                        geoPoint = poi.toGeoPoint()
+                    }
                 ) {
                     Column(
                         modifier = Modifier
@@ -168,7 +257,10 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: LocationViewModel, navC
                         poi.name?.let { Text(text = it, fontSize = 20.sp) }
                         val poiGeoPoint = poi.toGeoPoint()
 
-                        Text(text = "${poiGeoPoint.latitude}, ${poiGeoPoint.longitude}", fontSize = 14.sp)
+                        Text(
+                            text = "${poiGeoPoint.latitude}, ${poiGeoPoint.longitude}",
+                            fontSize = 14.sp
+                        )
                     }
                 }
             }

@@ -1,23 +1,16 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
 import android.content.ContentValues
-import android.content.res.AssetManager
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
-import pt.isec.amov.tp.eguide.data.Category
-import pt.isec.amov.tp.eguide.data.Location
-import pt.isec.amov.tp.eguide.data.PointOfInterest
 import java.io.File
-import java.io.IOException
-import java.io.InputStream
 
 class FStorageUtil {
     companion object {
@@ -91,12 +84,12 @@ class FStorageUtil {
                 var approvals: List<String>? = document.get("ApprovedByUsers") as List<String>?
                 val isApproved = document.getBoolean("IsApproved")
 
-                if(approvals == null) {
+                if (approvals == null) {
                     approvals = listOf()
                 }
 
                 approvals = approvals.plus(userId)
-                val shouldApprove = if(approvals.size > 2) true else isApproved
+                val shouldApprove = if (approvals.size > 2) true else isApproved
                 val data = mapOf(
                     "ApprovedByUsers" to approvals,
                     "IsApproved" to shouldApprove
@@ -107,21 +100,32 @@ class FStorageUtil {
                 null
             }
                 .addOnSuccessListener {
-                    Log.d("Firestore", "Successfully added $collectionName approval for document $documentName for user $userId")
+                    Log.d(
+                        "Firestore",
+                        "Successfully added $collectionName approval for document $documentName for user $userId"
+                    )
                 }
-                .addOnFailureListener {e ->
-                    Log.e("Firestore", "Failed to add $collectionName approval for document $documentName for user $userId", e)
+                .addOnFailureListener { e ->
+                    Log.e(
+                        "Firestore",
+                        "Failed to add $collectionName approval for document $documentName for user $userId",
+                        e
+                    )
                 }
         }
 
         private val firebaseObservers: MutableMap<String, ListenerRegistration> = mutableMapOf()
 
-        fun <T> startObserver(collectionName: String, onNewValues: (String, T) -> Unit, objectType: Class<T>) {
+        fun <T> startObserver(
+            collectionName: String,
+            onNewValues: (String, T) -> Unit,
+            objectType: Class<T>
+        ) {
             stopObserver(collectionName)
             val db = Firebase.firestore
             val listener = db.collection(collectionName)
-                .addSnapshotListener{ result, e ->
-                    if(result == null || e != null){
+                .addSnapshotListener { result, e ->
+                    if (result == null || e != null) {
                         Log.e("Firestore", "Error getting $collectionName", e)
                         return@addSnapshotListener
                     }
@@ -139,7 +143,7 @@ class FStorageUtil {
             firebaseObservers[collectionName] = listener
         }
 
-        private fun stopObserver(collectionName: String){
+        private fun stopObserver(collectionName: String) {
             val listener: ListenerRegistration? = firebaseObservers[collectionName]
             listener?.let {
                 listener.remove()
@@ -155,9 +159,16 @@ class FStorageUtil {
             val pathRef = storage.reference.child("images/$userId/$imageType/$imageName")
             val uploadTask = pathRef.putFile(imageUri)
             uploadTask.addOnFailureListener { e ->
-                Log.e("Firestore", "Failed to upload image $imageType/$imageName($imageUri) for user $userId", e)
+                Log.e(
+                    "Firestore",
+                    "Failed to upload image $imageType/$imageName($imageUri) for user $userId",
+                    e
+                )
             }.addOnSuccessListener {
-                Log.d("Firestore", "Uploaded image $imageType/$$imageName($imageUri) for user $userId")
+                Log.d(
+                    "Firestore",
+                    "Uploaded image $imageType/$$imageName($imageUri) for user $userId"
+                )
             }
         }
 
@@ -170,11 +181,59 @@ class FStorageUtil {
             val downloadTask = pathRef.getFile(localFile)
 
             downloadTask.addOnFailureListener { e ->
-                Log.e("Firestore", "Failed to download image $imageType/$imageName for user $userId", e)
+                Log.e(
+                    "Firestore",
+                    "Failed to download image $imageType/$imageName for user $userId",
+                    e
+                )
             }.addOnSuccessListener {
                 Log.d("Firestore", "Uploaded image $imageType/$imageName for user $userId")
                 onResult(localFile.toUri())
             }
         }
+
+        fun editPointOfInterest(
+            name: String,
+            description: String?,
+            coordinates: String?,
+            location: String?,
+            category: String?,
+        ){
+            val db = Firebase.firestore
+            val v = db.collection("POI").document(name)
+            val wasChanged = false
+
+            db.runTransaction { transaction ->
+                val doc = transaction.get(v)
+                if (doc.exists()) {
+                    if (description != "") {
+                        transaction.update(v, "Description", description)
+                        wasChanged == true
+                    }
+                    if (coordinates != "") {
+                        transaction.update(v, "Coordinates", coordinates)
+                        wasChanged == true
+                    }
+                    if (location != "") {
+                        transaction.update(v, "Location", location)
+                        wasChanged == true
+                    }
+                    if (category != "") {
+                        transaction.update(v, "Category", category)
+                        wasChanged == true
+                    }
+
+                    if (wasChanged == true) {
+                        transaction.update(v, "IsApproved", false)
+                    }
+                    null
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
+                    )
+            }
+        }
+
     }
 }

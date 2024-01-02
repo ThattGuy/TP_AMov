@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>\
-    <string name="logo_description">Logotipo da Empresa</string>
-    <string name="email">Email</string>
-    <string name="password">Senha</string>
-    <string name="empty_fields_error">Por favor, preencha todos os campos corretamente.</string>
-    <string name="passwords_dont_match_error">As senhas não coincidem.</string>
-    <string name="invalid_email_error">Formato de e-mail inválido.</string>
-    <string name="register">Registrar</string>
-    <string name="login">Entrar</string>
-    <string name="confirmPassword">Confirmar Senha</string>
-    <string name="name">Nome</string>
-    <string name="username">Nome de Usuário</string>
-    <string name="no_name">Nome não disponível</string>
-    <string name="register_category">Registrar Categoria</string>
-    <string name="approve">Aprovar</string>
-    <string name="no_locations">Não há Locais disponíveis</string>
-    <string name="register_point_of_interest">Registrar Ponto de Interesse</string>
-    <string name="category_name">Nome da Categoria</string>
-    <string name="category_description">Descrição da Categoria</string>
+    <string name="logo_description">Company Logo</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="empty_fields_error">Please fill in all fields correctly.</string>
+    <string name="passwords_dont_match_error">Passwords do not match.</string>
+    <string name="invalid_email_error">Invalid email format.</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="no_name">Name not available</string>
+    <string name="register_category">Register Category</string>
+    <string name="approve">Approve</string>
+    <string name="no_locations">There are no Locations available</string>
+    <string name="register_point_of_interest">Resgister point of interest</string>
+    <string name="category_name">Category Name</string>
+    <string name="category_description">Category Description</string>
     <string name="select_image">Selecionar Imagem</string>
-
-    <string name="save">Salvar</string>
-    <string name="description">Descrição</string>
-    <string name="coordinates">Coordenadas</string>
-    <string name="get_coordinates">Minhas coordenadas</string>
-    <string name="home">Início</string>
-    <string name="points_of_interest">Pontos de Interesse</string>
-    <string name="locations">Locais</string>
-    <string name="categories">Categorias</string>
+    <string name="save">Save</string>
+    <string name="description">Description</string>
+    <string name="coordinates">Coordinates</string>
+    <string name="get_coordinates">My coordinates</string>
+    <string name="home">Home</string>
+    <string name="points_of_interest">Points of Interest</string>
+    <string name="locations">Locations</string>
+    <string name="categories">Categories</string>
     <string name="password_updated">Password Updated</string>
     <string name="sign_out">Sign Out</string>
-
-
-    <string name="edit_category">Editar</string>
-    <string name="edit_location">Editar</string>
-    <string name="edit_point_of_interest">Editar</string>
-    <string name="portuguese">Português</string>
-    <string name="english">Inglês</string>
+    <string name="edit_category">Edit</string>
+    <string name="edit_location">Edit</string>
+    <string name="edit_point_of_interest">Edit</string>
+    <string name="portuguese">Portuguese</string>
+    <string name="english">English</string>
     <string name="register_location">Register Location</string>
     <string name="choose_what_to_register">Choose what to register</string>
     <string name="name_is_required">Name is required</string>
@@ -50,6 +47,9 @@
     <string name="poi_image">Image</string>
     <string name="location_image">Location Image</string>
     <string name="category_image">Category image</string>
+    <string name="no_description">No description</string>
+    <string name="no_location">No location</string>
+    <string name="no_category">No category</string>
 
 </resources>
 

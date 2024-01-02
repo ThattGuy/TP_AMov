@@ -65,7 +65,8 @@ fun PointOfInterestItem(
                 Row {
                     if (userId == pointOfInterest.createdBy) {
                         SquareButton(text = stringResource(id = R.string.edit_point_of_interest)) {
-                            //TODO
+                            viewModel.editPoiName = pointOfInterest.name.toString()
+                            navController.navigate(Screens.EDIT_POINT_OF_INTEREST.route)
                         }
                     }
                     if (userId != pointOfInterest.createdBy && !pointOfInterest.isApproved!! && !pointOfInterest.approvedByUsers?.contains(userId)!!) {

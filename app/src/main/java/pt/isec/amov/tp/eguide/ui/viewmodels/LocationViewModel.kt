@@ -31,8 +31,8 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     var selectedCategory = MutableLiveData<String?>(null)
     var selectedLocation = MutableLiveData<String?>(null)
     val mapBoundingBox = MutableLiveData(BoundingBox(0.0, 0.0, 0.0, 0.0))
+    var editPoiName: String? = null
 
-    // Permissions
     var coarseLocationPermission = false
     var fineLocationPermission = false
     var backgroundLocationPermission = false
@@ -42,18 +42,18 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
             currentLocation.value = location
         }
 
-        FStorageUtil.startObserver( collectionName = "POI", onNewValues = { id, poi ->
+        FStorageUtil.startObserver(collectionName = "POI", onNewValues = { id, poi ->
             poi.name = id
 
             pois.value = pois.value?.plus(poi)
         }, objectType = PointOfInterest::class.java)
 
-        FStorageUtil.startObserver( collectionName = "Categories", onNewValues = { id, category ->
+        FStorageUtil.startObserver(collectionName = "Categories", onNewValues = { id, category ->
             category.name = id
             categories.value = categories.value?.plus(category)
         }, objectType = Category::class.java)
 
-        FStorageUtil.startObserver( collectionName = "Locations", onNewValues = { id, location ->
+        FStorageUtil.startObserver(collectionName = "Locations", onNewValues = { id, location ->
             location.name = id
 
             locations.value = locations.value?.plus(location)
@@ -106,6 +106,24 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         )
     }
 
+    fun editPointOfInterest(
+        description: String?,
+        coordinates: String?,
+        categorySelected: String?,
+        locationSelected: String?
+    ) {
+
+        FStorageUtil.editPointOfInterest(
+            editPoiName!!,
+            description,
+            coordinates,
+            locationSelected,
+            categorySelected
+        )
+
+        pois.value = emptyList<PointOfInterest>()
+    }
+
     fun insertPOIImage(imageUri: Uri, imageName: String) {
         FStorageUtil.uploadImage(imageUri, "POI", imageName)
     }
@@ -130,20 +148,23 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         FStorageUtil.downloadImage(imageName, "Locations", onResult)
     }
 
-    fun approveCategory(category: Category, userId: String ) {
+    fun approveCategory(category: Category, userId: String) {
         FStorageUtil.insertApproval("Categories", category.name!!, userId)
     }
 
 
-    fun approveLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String ) {
+    fun approveLocation(location: pt.isec.amov.tp.eguide.data.Location, userId: String) {
         FStorageUtil.insertApproval("Locations", location.name!!, userId)
     }
 
-    fun approvePOI(poi: PointOfInterest, userId: String ) {
+    fun approvePOI(poi: PointOfInterest, userId: String) {
         FStorageUtil.insertApproval("Locations", poi.name!!, userId)
     }
 
-    private fun orderPOIsByDistance(pois: List<PointOfInterest>, otherPoint: GeoPoint): List<PointOfInterest> {
+    private fun orderPOIsByDistance(
+        pois: List<PointOfInterest>,
+        otherPoint: GeoPoint
+    ): List<PointOfInterest> {
         return pois.map { poi ->
             val poiGeoPoint = poi.toGeoPoint()
             val distance = poiGeoPoint.distanceToAsDouble(otherPoint)
@@ -159,16 +180,14 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     }
 
     fun refreshListPois() {
-        if(selectedCategory.value != null && selectedLocation.value != null) {
-            listPois.value = pois.value!!.filter { it.category == selectedCategory.value && it.location == selectedLocation.value }
-        }
-        else if(selectedCategory.value != null) {
+        if (selectedCategory.value != null && selectedLocation.value != null) {
+            listPois.value =
+                pois.value!!.filter { it.category == selectedCategory.value && it.location == selectedLocation.value }
+        } else if (selectedCategory.value != null) {
             listPois.value = pois.value!!.filter { it.category == selectedCategory.value }
-        }
-        else if(selectedLocation.value != null) {
+        } else if (selectedLocation.value != null) {
             listPois.value = pois.value!!.filter { it.location == selectedLocation.value }
-        }
-        else {
+        } else {
             listPois.value = refreshVisiblePois()
         }
     }

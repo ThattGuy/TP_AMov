@@ -1,7 +1,5 @@
 package pt.isec.amov.tp.eguide.ui.screens.uicomponents
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -46,20 +44,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
-import java.io.File
-import java.io.FileOutputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +66,6 @@ fun Layout_Bars(
     var showMenu: Boolean by remember { mutableStateOf(false) }
     var showMenuP: Boolean by remember { mutableStateOf(false) }
     var buttonPosition by remember { mutableStateOf(Offset.Zero) }
-    val context = LocalContext.current
 
     val isAuthenticated = viewModel.isUserAuthenticated()
 
@@ -115,9 +108,9 @@ fun Layout_Bars(
                 ) {
                     Box ( modifier = Modifier
                         .fillMaxSize()
-                        .clickable { openPdfInBrowser(context) },
+                        .clickable(onClick = { navController.navigate("creditos") }),
                         contentAlignment = Alignment.TopCenter,){
-                        Text("Manual do Utilizador",
+                        Text("Credits",
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
@@ -133,63 +126,30 @@ fun Layout_Bars(
             innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
                 content(innerPadding)
-                if (showMenu) {
-                    OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
-                        navController.navigate(Screens.MAIN.route)
-                        navController.navigate(Screens.LIST_LOCATIONS.route)
-                        navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                        navController.navigate(Screens.REGISTER_CATEGORY.route)
+
+                OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
+                    navController.navigate(Screens.MAIN.route)
+                    navController.navigate(Screens.LIST_LOCATIONS.route)
+                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                    navController.navigate(Screens.REGISTER_CATEGORY.route)
                     }
-                }
-                if(showMenuP) {
-                    AnimatedVisibility(
-                        visible = showMenuP,
-                        enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically()
+
+                AnimatedVisibility(
+                    visible = showMenuP,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
                     ) {
-                        ProfileMenu(
-                            "Profile",
-                            viewModel = viewModel,
-                            onDismiss = { showMenuP = false },
-                            navController = navController
-                        ) {
-                            navController.navigate(Screens.PROFILE.route)
-                            navController.navigate(Screens.PROFILE.route)
-                            navController.navigate("My Contributions")
-                            navController.navigate(Screens.CREDITS.route)
-                        }
+                    ProfileMenu("Profile", showMenuP, viewModel = viewModel,  onDismiss = { showMenuP = false }, navController = navController){
+                        navController.navigate(Screens.PROFILE.route)
+                        navController.navigate(Screens.PROFILE.route)
+                        navController.navigate("My Contributions")
+                        navController.navigate(Screens.CREDITS.route)
                     }
                 }
+
             }
         }
 }
-
-fun openPdfInBrowser(context: Context) {
-    val pdfFile = File(context.getExternalFilesDir(null), "your_pdf_file_name.pdf")
-    if (!pdfFile.exists()) {
-        // Copy the file from resources to external storage
-        context.resources.openRawResource(R.raw.guide).use { inputStream ->
-            FileOutputStream(pdfFile).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-        }
-    }
-
-    val contentUri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.provider",
-        pdfFile
-    )
-
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(contentUri, "application/pdf")
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }
-
-    context.startActivity(intent)
-}
-
-
 
 @Composable
 fun OverlayMenu(
@@ -301,6 +261,7 @@ fun InitializationView( viewModel: AuthViewModel, navController: NavHostControll
 @Composable
 fun ProfileMenu(
     title: String,
+    showMenuP: Boolean,
     viewModel: AuthViewModel,
     navController : NavHostController,
     onDismiss: () -> Unit,

@@ -115,7 +115,7 @@ fun Layout_Bars(
                 ) {
                     Box ( modifier = Modifier
                         .fillMaxSize()
-                        .clickable { openPdfInBrowser(context) },
+                        .clickable(onClick = { openPdfInBrowser(context) }),
                         contentAlignment = Alignment.TopCenter,){
                         Text("Manual do Utilizador",
                             modifier = Modifier
@@ -133,31 +133,24 @@ fun Layout_Bars(
             innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
                 content(innerPadding)
-                if (showMenu) {
-                    OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
-                        navController.navigate(Screens.MAIN.route)
-                        navController.navigate(Screens.LIST_LOCATIONS.route)
-                        navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                        navController.navigate(Screens.REGISTER_CATEGORY.route)
+
+                OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
+                    navController.navigate(Screens.MAIN.route)
+                    navController.navigate(Screens.LIST_LOCATIONS.route)
+                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                    navController.navigate(Screens.REGISTER_CATEGORY.route)
                     }
-                }
-                if(showMenuP) {
-                    AnimatedVisibility(
-                        visible = showMenuP,
-                        enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically()
+
+                AnimatedVisibility(
+                    visible = showMenuP,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
                     ) {
-                        ProfileMenu(
-                            "Profile",
-                            viewModel = viewModel,
-                            onDismiss = { showMenuP = false },
-                            navController = navController
-                        ) {
-                            navController.navigate(Screens.PROFILE.route)
-                            navController.navigate(Screens.PROFILE.route)
-                            navController.navigate("My Contributions")
-                            navController.navigate(Screens.CREDITS.route)
-                        }
+                    ProfileMenu("Profile", viewModel = viewModel,  onDismiss = { showMenuP = false }, navController = navController){
+                        navController.navigate(Screens.PROFILE.route)
+                        navController.navigate(Screens.PROFILE.route)
+                        navController.navigate("My Contributions")
+                        navController.navigate(Screens.CREDITS.route)
                     }
                 }
             }

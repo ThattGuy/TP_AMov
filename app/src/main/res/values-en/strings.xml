@@ -56,4 +56,6 @@
     <string name="rating">Rating</string>
     <string name="submit_review">Submit Review</string>
     <string name="view_reviews">View Reviews</string>
+    <string name="aprove_deletion">Approve Deletion</string>
+
 </resources>

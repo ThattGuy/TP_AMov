@@ -56,4 +56,5 @@
     <string name="rating">Avaliação</string>
     <string name="submit_review">Enviar Avaliação</string>
     <string name="view_reviews">Ver Avaliações</string>
+    <string name="aprove_deletion">Aprovar Remoção</string>
 </resources>

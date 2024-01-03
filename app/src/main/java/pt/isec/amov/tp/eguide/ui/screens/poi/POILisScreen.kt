@@ -95,12 +95,20 @@ fun PointOfInterestItem(
                         navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
                     }
                 }
+
                 SquareButton(text = stringResource(id = R.string.view_reviews)) {
                     viewModel.poiToEdit = pointOfInterest.name.toString()
                     viewModel.updateReviewsForPOI(pointOfInterest.name.toString())
                     navController.navigate(Screens.LIST_REVIEWS.route)
                 }
 
+                if(userId != pointOfInterest.createdBy && pointOfInterest.pendingDelete == true && !pointOfInterest.deletionApprovedBy?.contains(userId)!!)
+                {
+                    SquareButton(text = stringResource(id = R.string.aprove_deletion)) {
+                        viewModel.approvePOIDeletion(pointOfInterest, userId)
+                        navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                    }
+                }
             }
         }
     }

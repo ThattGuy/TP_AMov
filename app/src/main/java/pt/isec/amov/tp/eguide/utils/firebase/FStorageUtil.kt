@@ -216,22 +216,21 @@ class FStorageUtil {
             }
         }
 
-        fun downloadImage(imageName: String, imageType: String, onResult: (Uri) -> Unit) {
+        fun downloadImage(posterUsername : String, imageName: String, imageType: String, onResult: (Uri) -> Unit) {
             val storage = Firebase.storage
-            val userId = FAuthUtil.currentUser?.uid
             val localFile = File.createTempFile("images", "jpg")
 
-            val pathRef = storage.reference.child("images/$userId/$imageType/$imageName")
+            val pathRef = storage.reference.child("images/$posterUsername/$imageType/$imageName")
             val downloadTask = pathRef.getFile(localFile)
 
             downloadTask.addOnFailureListener { e ->
                 Log.e(
                     "Firestore",
-                    "Failed to download image $imageType/$imageName for user $userId",
+                    "Failed to download image $imageType/$imageName for user $posterUsername",
                     e
                 )
             }.addOnSuccessListener {
-                Log.d("Firestore", "Uploaded image $imageType/$imageName for user $userId")
+                Log.d("Firestore", "Uploaded image $imageType/$imageName for user $posterUsername")
                 onResult(localFile.toUri())
             }
         }

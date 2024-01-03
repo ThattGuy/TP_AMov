@@ -39,7 +39,7 @@ fun CategoryItem(category: Category, navController: NavController, viewModel: Lo
     val imageFile = remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(key1 = category.name) {
-        viewModel.getCategoryImage(category.name!!) { imageFile.value = it }
+        viewModel.getCategoryImage(category.createdBy.toString(),category.name!!) { imageFile.value = it }
     }
 
     Card(

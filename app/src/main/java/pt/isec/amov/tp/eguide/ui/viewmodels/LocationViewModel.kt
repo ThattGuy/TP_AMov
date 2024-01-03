@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.runBlocking
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp.eguide.data.Category
@@ -140,16 +141,16 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         FStorageUtil.uploadImage(imageUri, "Locations", imageName)
     }
 
-    fun getPOIImage(imageName: String, onResult: (Uri) -> Unit) {
-        FStorageUtil.downloadImage(imageName, "POI", onResult)
+    fun getPOIImage(posterUsername : String, imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(posterUsername, imageName, "POI", onResult)
     }
 
-    fun getCategoryImage(imageName: String, onResult: (Uri) -> Unit) {
-        FStorageUtil.downloadImage(imageName, "Categories", onResult)
+    fun getCategoryImage(posterUsername : String,imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(posterUsername, imageName, "Categories", onResult)
     }
 
-    fun getLocationImage(imageName: String, onResult: (Uri) -> Unit) {
-        FStorageUtil.downloadImage(imageName, "Locations", onResult)
+    fun getLocationImage(posterUsername : String, imageName: String, onResult: (Uri) -> Unit) {
+        FStorageUtil.downloadImage(posterUsername, imageName, "Locations", onResult)
     }
 
     fun approveCategory(category: Category, userId: String) {
@@ -227,8 +228,10 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     }
 
     fun updateReviewsForPOI(poiDocumentName: String) {
-        FStorageUtil.getPOIReviews(poiDocumentName) { reviews ->
-            reviewsList.value = reviews
+
+            FStorageUtil.getPOIReviews(poiDocumentName) { reviews ->
+                reviewsList.value = reviews
+
         }
     }
 

@@ -93,7 +93,7 @@ fun Layout_Bars(
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 buttonPosition = coordinates.positionInRoot()
                             }
-                            ) {
+                        ) {
                             Icon(Icons.Filled.Person, contentDescription = "Profile Menu")
                         }
                     }
@@ -122,33 +122,33 @@ fun Layout_Bars(
                 }
             }
         }
-        ) {
+    ) {
             innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
-                content(innerPadding)
+        Box(modifier = Modifier.padding(innerPadding)) {
+            content(innerPadding)
 
-                OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
-                    navController.navigate(Screens.MAIN.route)
-                    navController.navigate(Screens.LIST_LOCATIONS.route)
-                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                    navController.navigate(Screens.REGISTER_CATEGORY.route)
-                    }
-
-                AnimatedVisibility(
-                    visible = showMenuP,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                    ) {
-                    ProfileMenu("Profile", showMenuP, viewModel = viewModel,  onDismiss = { showMenuP = false }, navController = navController){
-                        navController.navigate(Screens.PROFILE.route)
-                        navController.navigate(Screens.PROFILE.route)
-                        navController.navigate("My Contributions")
-                        navController.navigate(Screens.CREDITS.route)
-                    }
-                }
-
+            OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
+                navController.navigate(Screens.MAIN.route)
+                navController.navigate(Screens.LIST_LOCATIONS.route)
+                navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                navController.navigate(Screens.REGISTER_CATEGORY.route)
             }
+
+            AnimatedVisibility(
+                visible = showMenuP,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                ProfileMenu("Profile", showMenuP, viewModel = viewModel,  onDismiss = { showMenuP = false }, navController = navController){
+                    navController.navigate(Screens.PROFILE.route)
+                    navController.navigate(Screens.PROFILE.route)
+                    navController.navigate("My Contributions")
+                    navController.navigate(Screens.CREDITS.route)
+                }
+            }
+
         }
+    }
 }
 
 @Composable

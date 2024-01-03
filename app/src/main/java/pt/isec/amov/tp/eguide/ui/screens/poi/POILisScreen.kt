@@ -43,7 +43,7 @@ fun PointOfInterestItem(
     val imageFile = remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(key1 = pointOfInterest.name) {
-        viewModel.getPOIImage(pointOfInterest.name!!) { imageFile.value = it }
+        viewModel.getPOIImage(pointOfInterest.createdBy.toString(),pointOfInterest.name!!) { imageFile.value = it }
     }
 
     Card(

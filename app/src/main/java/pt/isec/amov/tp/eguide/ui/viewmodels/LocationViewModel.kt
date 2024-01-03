@@ -218,4 +218,8 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         categories.value = currentList.filter { it.name != categoryToEdit }
     }
 
+    fun approvePOIDeletion(pointOfInterest: PointOfInterest, userId: String) {
+        FStorageUtil.insertPOIDeletionApproval(pointOfInterest.name!!, userId)
+    }
+
 }

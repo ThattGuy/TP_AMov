@@ -27,7 +27,12 @@ data class PointOfInterest(
     @PropertyName("ImageUrl")
     val imageUrl: String? = null,
     @PropertyName("ApprovedByUsers")
-val approvedByUsers: List<String>? = listOf()
+val approvedByUsers: List<String>? = listOf(),
+    @PropertyName("PendingDelete")
+    var pendingDelete: Boolean? = false,
+    @PropertyName("DeletionApprovedBy")
+    val deletionApprovedBy: List<String>? = listOf()
+
 
 ) {
     fun toGeoPoint(): GeoPoint {

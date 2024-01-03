@@ -222,7 +222,7 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         categories.value = currentList.filter { it.name != categoryToEdit }
     }
 
-    fun addReview( userId: String, reviewTitle: String, reviewText: String, rating: Long) {
+    fun addReview(userId: String, reviewTitle: String, reviewText: String, rating: Long) {
         FStorageUtil.insertPOIReview(poiToEdit.toString(), reviewTitle, userId, reviewText, rating)
     }
 
@@ -230,6 +230,10 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         FStorageUtil.getPOIReviews(poiDocumentName) { reviews ->
             reviewsList.value = reviews
         }
+    }
+
+    fun approvePOIDeletion(pointOfInterest: PointOfInterest, userId: String) {
+        FStorageUtil.insertPOIDeletionApproval(pointOfInterest.name!!, userId)
     }
 
 }

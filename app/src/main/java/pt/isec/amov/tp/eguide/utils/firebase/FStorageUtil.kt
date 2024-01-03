@@ -68,7 +68,8 @@ class FStorageUtil {
                 "Category" to category,
                 "IsApproved" to false,
                 "Likes" to 0,
-                "Dislikes" to 0
+                "Dislikes" to 0,
+                "PendingDelete" to false
             )
             db.collection("POI").document(name).set(data)
                 .addOnCompleteListener {
@@ -279,13 +280,25 @@ class FStorageUtil {
         }
 
         fun deletePointOfInterest(editPoiName: String) {
+            //o campo pendingDelete deve ficar a true, isto e um update a ulemento que ja existe
             val db = Firebase.firestore
+            val v = db.collection("POI").document(editPoiName)
+
+            v.update("PendingDelete", true)
+                .addOnCompleteListener { result ->
+                    Log.e("Firestore", "Point of interest deleted")
+                }
+
+
+         /*   val db = Firebase.firestore
             val v = db.collection("POI").document(editPoiName)
 
             v.delete()
                 .addOnCompleteListener { result ->
                     Log.e("Firestore", "Point of interest deleted")
                 }
+
+          */
         }
 
         fun editLocation(nameOfEditLocation: String, description: String, coordinates: String){
@@ -358,6 +371,48 @@ class FStorageUtil {
             v.delete()
                 .addOnCompleteListener { result ->
                     Log.e("Firestore", "Category deleted")
+                }
+        }
+
+        fun insertPOIDeletionApproval(POIname: String, userId: String) {
+
+val db = Firebase.firestore
+
+            db.runTransaction {
+                val documentRef = db.collection("POI").document(POIname)
+                val document = it.get(documentRef)
+                var approvals: List<String>? = document.get("DeletionApprovedBy") as List<String>?
+                val isApproved = document.getBoolean("PendingDelete")
+
+                if (approvals == null) {
+                    approvals = listOf()
+                }
+
+                approvals = approvals.plus(userId)
+                if(approvals.size >= 3){
+                    it.delete(documentRef)
+                }else{
+                    val data = mapOf(
+                        "DeletionApprovedBy" to approvals
+                    )
+
+                    it.update(documentRef, data)
+                }
+
+                null
+            }
+                .addOnSuccessListener {
+                    Log.d(
+                        "Firestore",
+                        "Successfully added POI deletion approval for document $POIname for user $userId"
+                    )
+                }
+                .addOnFailureListener { e ->
+                    Log.e(
+                        "Firestore",
+                        "Failed to add POI deletion approval for document $POIname for user $userId",
+                        e
+                    )
                 }
         }
     }

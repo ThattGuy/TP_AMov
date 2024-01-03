@@ -1,5 +1,7 @@
 package pt.isec.amov.tp.eguide.ui.screens.uicomponents
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -44,16 +46,21 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import pt.isec.amov.tp.eguide.R
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +73,7 @@ fun Layout_Bars(
     var showMenu: Boolean by remember { mutableStateOf(false) }
     var showMenuP: Boolean by remember { mutableStateOf(false) }
     var buttonPosition by remember { mutableStateOf(Offset.Zero) }
+    val context = LocalContext.current
 
     val isAuthenticated = viewModel.isUserAuthenticated()
 
@@ -108,7 +116,7 @@ fun Layout_Bars(
                 ) {
                     Box ( modifier = Modifier
                         .fillMaxSize()
-                        .clickable(onClick = { navController.navigate("creditos") }),
+                        .clickable { openPdfInBrowser(context) },
                         contentAlignment = Alignment.TopCenter,){
                         Text("Credits",
                             modifier = Modifier
@@ -150,6 +158,33 @@ fun Layout_Bars(
             }
         }
 }
+
+fun openPdfInBrowser(context: Context) {
+    val pdfFile = File(context.getExternalFilesDir(null), "your_pdf_file_name.pdf")
+    if (!pdfFile.exists()) {
+        // Copy the file from resources to external storage
+        context.resources.openRawResource(R.raw.guide).use { inputStream ->
+            FileOutputStream(pdfFile).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+    }
+
+    val contentUri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.provider",
+        pdfFile
+    )
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(contentUri, "application/pdf")
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    }
+
+    context.startActivity(intent)
+}
+
+
 
 @Composable
 fun OverlayMenu(

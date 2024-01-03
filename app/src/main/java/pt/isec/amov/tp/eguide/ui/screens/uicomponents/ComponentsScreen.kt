@@ -165,7 +165,7 @@ fun Layout_Bars(
 }
 
 fun openPdfInBrowser(context: Context) {
-    val pdfFile = File(context.getExternalFilesDir(null), "your_pdf_file_name.pdf")
+    val pdfFile = File(context.getExternalFilesDir(null), "eGuide.pdf")
     if (!pdfFile.exists()) {
         // Copy the file from resources to external storage
         context.resources.openRawResource(R.raw.guide).use { inputStream ->

@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -44,10 +45,9 @@ fun CategoryItem(category: Category, navController: NavController, viewModel: Lo
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             imageFile.value?.let { uri ->
                 SubcomposeAsyncImage(
                     model = uri,
@@ -57,13 +57,23 @@ fun CategoryItem(category: Category, navController: NavController, viewModel: Lo
                 )
             }
 
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(text = category.name ?: stringResource(id = R.string.no_name))
+            Column(modifier = Modifier
+                .padding(8.dp)
+                .weight(1f)
+            ) {
+                Text(
+                    text = category.name ?: stringResource(id = R.string.no_name),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = category.description ?: stringResource(id = R.string.no_description),
+                )
 
-                Row {
+                Column(horizontalAlignment = Alignment.End) {
                     if (userId == category.createdBy) {
                         SquareButton(text = stringResource(id = R.string.edit_category)) {
-                            //TODO
+                            viewModel.categoryToEdit = category.name
+                            navController.navigate(Screens.EDIT_CATEGORY.route)
                         }
                     }
                     if (userId != category.createdBy && !category.isApproved!! && !category.approvedByUsers?.contains(userId)!!) {
@@ -88,7 +98,6 @@ fun SquareButton(text: String, onClick: () -> Unit) {
         Text(text = text)
     }
 }
-
 
 
 @Composable

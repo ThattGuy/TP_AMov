@@ -6,11 +6,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import pt.isec.amov.tp.eguide.R
@@ -64,7 +69,10 @@ fun EditPointOfInterest(navController: NavController, viewModel: LocationViewMod
 
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -124,6 +132,7 @@ fun EditPointOfInterest(navController: NavController, viewModel: LocationViewMod
             }
         }
 
+
         Button(
             onClick = {
                 viewModel.editPointOfInterest(description, coordinates, categorySelected, locationSelected)
@@ -132,6 +141,20 @@ fun EditPointOfInterest(navController: NavController, viewModel: LocationViewMod
             enabled = true
         ) {
             Text(stringResource(id = R.string.save))
+        }
+
+
+        Button(
+            onClick = {
+                viewModel.deletePointOfInterest()
+                navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red
+            ),
+            enabled = true
+        ) {
+            Text(stringResource(id = R.string.delete))
         }
 
     }

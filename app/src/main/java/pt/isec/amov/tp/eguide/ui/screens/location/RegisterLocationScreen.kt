@@ -43,7 +43,7 @@ fun RegisterLocationScreen(viewModel: LocationViewModel, navController: NavContr
 
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
-    // Validation check to enable or disable the save button
+
     val isFormValid = name.isNotBlank() && description.isNotBlank() && coordinates.isNotBlank() && imageUri != null
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()

@@ -20,6 +20,8 @@ import pt.isec.amov.tp.eguide.ui.screens.auth.RegisterScreen
 import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.screens.user.EditUserInfoScreen
 import pt.isec.amov.tp.eguide.ui.screens.auth.LoginScreen
+import pt.isec.amov.tp.eguide.ui.screens.category.EditCategory
+import pt.isec.amov.tp.eguide.ui.screens.location.EditLocation
 import pt.isec.amov.tp.eguide.ui.screens.poi.EditPointOfInterest
 import pt.isec.amov.tp.eguide.ui.screens.uicomponents.InitializationView
 import pt.isec.amov.tp.eguide.ui.screens.uicomponents.Layout_Bars
@@ -129,6 +131,16 @@ fun SetupNavGraph(navController: NavHostController,
         composable(Screens.EDIT_POINT_OF_INTEREST.route) {
             Layout_Bars(viewModel = authViewModel, navController = navController) {
                 EditPointOfInterest(viewModel = locationViewModel, navController = navController)
+            }
+        }
+        composable(Screens.EDIT_LOCATION.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                EditLocation(viewModel = locationViewModel, navController = navController)
+            }
+        }
+        composable(Screens.EDIT_CATEGORY.route) {
+            Layout_Bars(viewModel = authViewModel, navController = navController) {
+                EditCategory(viewModel = locationViewModel, navController = navController)
             }
         }
     }

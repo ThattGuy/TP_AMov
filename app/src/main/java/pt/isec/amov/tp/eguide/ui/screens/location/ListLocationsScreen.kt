@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -49,7 +50,6 @@ fun LocationItem(location: Location, viewModel: LocationViewModel, navController
             .padding(8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             imageFile.value?.let { uri ->
                 SubcomposeAsyncImage(
                     model = uri,
@@ -59,13 +59,21 @@ fun LocationItem(location: Location, viewModel: LocationViewModel, navController
                 )
             }
 
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier
+                .padding(8.dp)
+                .weight(1f)
+            ) {
+                Text(
+                    text = location.name ?: stringResource(id = R.string.no_name),
+                    fontWeight = FontWeight.Bold
+                )
+                // Add more details here if needed
 
-
-                Row {
+                Column(horizontalAlignment = Alignment.End) {
                     if (userId == location.createdBy) {
                         SquareButton(text = stringResource(id = R.string.edit_location)) {
-                            //TODO
+                            viewModel.locationToEdit = location.name.toString()
+                            navController.navigate(Screens.EDIT_LOCATION.route)
                         }
                     }
                     if (userId != location.createdBy && !location.isApproved!! && !location.approvedByUsers?.contains(userId)!!) {

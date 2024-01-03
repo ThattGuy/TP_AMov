@@ -6,6 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import pt.isec.amov.tp.eguide.R
@@ -56,10 +59,8 @@ fun RegisterPointOfInterest(navController: NavController, viewModel: LocationVie
 
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
-    // Validation check to enable or disable the save button
     val isFormValid = name.isNotBlank() && description.isNotBlank() && coordinates.isNotBlank() && categorySelected != "Categoria" && locationSelected != "Location" && imageUri != null
 
-    // Function to launch image picker
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -68,8 +69,11 @@ fun RegisterPointOfInterest(navController: NavController, viewModel: LocationVie
 
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(id = R.string.name)) })

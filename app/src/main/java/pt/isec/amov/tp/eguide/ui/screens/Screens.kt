@@ -15,7 +15,9 @@ enum class Screens(display: String) {
     CONTRIBUTIONS("MyContributions"),
     CREDITS("Credits"),
     CHOOSEWHATTOREGISTER("ChooseWhatToRegister"),
-    EDIT_POINT_OF_INTEREST("EditPointOfInterest");
+    EDIT_POINT_OF_INTEREST("EditPointOfInterest"),
+    EDIT_LOCATION("EditLocation"),
+    EDIT_CATEGORY("EditCategory");
 
 
     val route : String

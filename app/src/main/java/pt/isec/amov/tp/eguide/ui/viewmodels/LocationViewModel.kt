@@ -31,7 +31,10 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     var selectedCategory = MutableLiveData<String?>(null)
     var selectedLocation = MutableLiveData<String?>(null)
     val mapBoundingBox = MutableLiveData(BoundingBox(0.0, 0.0, 0.0, 0.0))
-    var editPoiName: String? = null
+
+    var poiToEdit: String? = null
+    var locationToEdit: String? = null
+    var categoryToEdit: String? = null
 
     var coarseLocationPermission = false
     var fineLocationPermission = false
@@ -112,7 +115,7 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         locationSelected: String?
     ) {
         FStorageUtil.editPointOfInterest(
-            editPoiName!!,
+            poiToEdit!!,
             description,
             coordinates,
             locationSelected,
@@ -187,6 +190,32 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         } else {
             listPois.value = refreshVisiblePois()
         }
+    }
+
+    fun deletePointOfInterest() {
+        FStorageUtil.deletePointOfInterest(poiToEdit!!)
+        val currentList = pois.value ?: return
+        pois.value = currentList.filter { it.name != poiToEdit }
+    }
+
+    fun editLocation(description: String, coordinates: String) {
+        FStorageUtil.editLocation(locationToEdit!!, description, coordinates)
+    }
+
+    fun deleteLocation() {
+        FStorageUtil.deleteLocation(locationToEdit!!)
+        val currentList = locations.value ?: return
+        locations.value = currentList.filter { it.name != locationToEdit }
+    }
+
+    fun editCategory(categoryDescription: String) {
+        FStorageUtil.editCategory(categoryToEdit!!, categoryDescription)
+    }
+
+    fun deleteCategory() {
+        FStorageUtil.deleteCategory(categoryToEdit!!)
+        val currentList = categories.value ?: return
+        categories.value = currentList.filter { it.name != categoryToEdit }
     }
 
 }

@@ -95,7 +95,7 @@ class FStorageUtil {
                 }
 
                 approvals = approvals.plus(userId)
-                val shouldApprove = if (approvals.size > 2) true else isApproved
+                val shouldApprove = if (approvals.size >= 2) true else isApproved
                 val data = mapOf(
                     "ApprovedByUsers" to approvals,
                     "IsApproved" to shouldApprove
@@ -207,29 +207,29 @@ class FStorageUtil {
         ){
             val db = Firebase.firestore
             val v = db.collection("POI").document(name)
-            val wasChanged = false
+            var wasChanged = false
 
             db.runTransaction { transaction ->
                 val doc = transaction.get(v)
                 if (doc.exists()) {
                     if (description != "") {
                         transaction.update(v, "Description", description)
-                        wasChanged == true
+                        wasChanged = true
                     }
                     if (coordinates != "") {
                         transaction.update(v, "Coordinates", coordinates)
-                        wasChanged == true
+                        wasChanged = true
                     }
                     if (location != "") {
                         transaction.update(v, "Location", location)
-                        wasChanged == true
+                        wasChanged = true
                     }
                     if (category != "") {
                         transaction.update(v, "Category", category)
-                        wasChanged == true
+                        wasChanged = true
                     }
 
-                    if (wasChanged == true) {
+                    if (wasChanged) {
                         transaction.update(v, "IsApproved", false)
                     }
                     null
@@ -241,6 +241,87 @@ class FStorageUtil {
             }
         }
 
+        fun deletePointOfInterest(editPoiName: String) {
+            val db = Firebase.firestore
+            val v = db.collection("POI").document(editPoiName)
 
+            v.delete()
+                .addOnCompleteListener { result ->
+                    Log.e("Firestore", "Point of interest deleted")
+                }
+        }
+
+        fun editLocation(nameOfEditLocation: String, description: String, coordinates: String){
+            val db = Firebase.firestore
+            val v = db.collection("Locations").document(nameOfEditLocation)
+            var wasChanged = false
+
+            db.runTransaction { transaction ->
+                val doc = transaction.get(v)
+                if (doc.exists()) {
+                    if (description != "") {
+                        transaction.update(v, "Description", description)
+                        wasChanged = true
+                    }
+                    if (coordinates != "") {
+                        transaction.update(v, "Coordinates", coordinates)
+                        wasChanged = true
+                    }
+                    if (wasChanged) {
+                        transaction.update(v, "IsApproved", false)
+                    }
+                    null
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
+                    )
+            }
+        }
+
+        fun deleteLocation(nameOfEditLocation: String) {
+            val db = Firebase.firestore
+            val v = db.collection("Locations").document(nameOfEditLocation)
+
+            v.delete()
+                .addOnCompleteListener { result ->
+                    Log.e("Firestore", "Location deleted")
+                }
+        }
+
+        fun editCategory(categoryToEdit: String, categoryDescription: String) {
+            val db = Firebase.firestore
+            val v = db.collection("Categories").document(categoryToEdit)
+            var wasChanged = false
+
+            db.runTransaction { transaction ->
+                val doc = transaction.get(v)
+                if (doc.exists()) {
+                    if (categoryDescription != "") {
+                        transaction.update(v, "Description", categoryDescription)
+                        wasChanged = true
+                    }
+
+                    if (wasChanged) {
+                        transaction.update(v, "IsApproved", false)
+                    }
+                    null
+                } else
+                    throw FirebaseFirestoreException(
+                        "Doesn't exist",
+                        FirebaseFirestoreException.Code.UNAVAILABLE
+                    )
+            }
+        }
+
+        fun deleteCategory(categoryToEdit: String) {
+            val db = Firebase.firestore
+            val v = db.collection("Categories").document(categoryToEdit)
+
+            v.delete()
+                .addOnCompleteListener { result ->
+                    Log.e("Firestore", "Category deleted")
+                }
+        }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -49,7 +51,6 @@ fun PointOfInterestItem(
         .padding(8.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             imageFile.value?.let { uri ->
                 SubcomposeAsyncImage(
                     model = uri,
@@ -59,27 +60,38 @@ fun PointOfInterestItem(
                 )
             }
 
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(text = pointOfInterest.name ?: stringResource(id = R.string.no_name))
+            Column(modifier = Modifier
+                .padding(8.dp)
+                .weight(1f)
+            ) {
+                Text(
+                    text = pointOfInterest.name ?: stringResource(id = R.string.no_name),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = pointOfInterest.description ?: stringResource(id = R.string.no_description))
+                Text(text = pointOfInterest.location ?: stringResource(id = R.string.no_location))
+                Text(text = pointOfInterest.category ?: stringResource(id = R.string.no_category))
+            }
 
-                Row {
-                    if (userId == pointOfInterest.createdBy) {
-                        SquareButton(text = stringResource(id = R.string.edit_point_of_interest)) {
-                            viewModel.editPoiName = pointOfInterest.name.toString()
-                            navController.navigate(Screens.EDIT_POINT_OF_INTEREST.route)
-                        }
+
+            Column(horizontalAlignment = Alignment.End) {
+                if (userId == pointOfInterest.createdBy) {
+                    SquareButton(text = stringResource(id = R.string.edit_point_of_interest)) {
+                        viewModel.poiToEdit = pointOfInterest.name.toString()
+                        navController.navigate(Screens.EDIT_POINT_OF_INTEREST.route)
                     }
-                    if (userId != pointOfInterest.createdBy && !pointOfInterest.isApproved!! && !pointOfInterest.approvedByUsers?.contains(userId)!!) {
-                        SquareButton(text = stringResource(id = R.string.approve)) {
-                            viewModel.approvePOI(pointOfInterest, userId)
-                            navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                        }
+                }
+                if (userId != pointOfInterest.createdBy && !pointOfInterest.isApproved!! && !pointOfInterest.approvedByUsers?.contains(userId)!!) {
+                    SquareButton(text = stringResource(id = R.string.approve)) {
+                        viewModel.approvePOI(pointOfInterest, userId)
+                        navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
                     }
                 }
             }
         }
     }
 }
+
 
 
 
@@ -113,6 +125,7 @@ fun ListPointsOfInterest(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
 
         Button(onClick = { navController.navigate(Screens.REGISTER_POINT_OF_INTEREST.route) }) {
             Text(text = stringResource(id = R.string.register_point_of_interest))

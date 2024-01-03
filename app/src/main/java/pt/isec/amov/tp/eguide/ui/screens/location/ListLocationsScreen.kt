@@ -41,7 +41,7 @@ fun LocationItem(location: Location, viewModel: LocationViewModel, navController
     val imageFile = remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(key1 = location.name) {
-        viewModel.getLocationImage(location.name!!) { imageFile.value = it }
+        viewModel.getLocationImage(location.createdBy.toString(),location.name!!) { imageFile.value = it }
     }
 
     Card(

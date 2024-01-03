@@ -60,7 +60,6 @@ import pt.isec.amov.tp.eguide.ui.screens.Screens
 import pt.isec.amov.tp.eguide.ui.viewmodels.AuthViewModel
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,7 +117,7 @@ fun Layout_Bars(
                         .fillMaxSize()
                         .clickable { openPdfInBrowser(context) },
                         contentAlignment = Alignment.TopCenter,){
-                        Text("Credits",
+                        Text("Manual do Utilizador",
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
@@ -134,27 +133,33 @@ fun Layout_Bars(
             innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
                 content(innerPadding)
-
-                OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
-                    navController.navigate(Screens.MAIN.route)
-                    navController.navigate(Screens.LIST_LOCATIONS.route)
-                    navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
-                    navController.navigate(Screens.REGISTER_CATEGORY.route)
-                    }
-
-                AnimatedVisibility(
-                    visible = showMenuP,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                    ) {
-                    ProfileMenu("Profile", showMenuP, viewModel = viewModel,  onDismiss = { showMenuP = false }, navController = navController){
-                        navController.navigate(Screens.PROFILE.route)
-                        navController.navigate(Screens.PROFILE.route)
-                        navController.navigate("My Contributions")
-                        navController.navigate(Screens.CREDITS.route)
+                if (showMenu) {
+                    OverlayMenu("MENU", showMenu, onDismiss = { showMenu = false }, navController) {
+                        navController.navigate(Screens.MAIN.route)
+                        navController.navigate(Screens.LIST_LOCATIONS.route)
+                        navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
+                        navController.navigate(Screens.REGISTER_CATEGORY.route)
                     }
                 }
-
+                if(showMenuP) {
+                    AnimatedVisibility(
+                        visible = showMenuP,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically()
+                    ) {
+                        ProfileMenu(
+                            "Profile",
+                            viewModel = viewModel,
+                            onDismiss = { showMenuP = false },
+                            navController = navController
+                        ) {
+                            navController.navigate(Screens.PROFILE.route)
+                            navController.navigate(Screens.PROFILE.route)
+                            navController.navigate("My Contributions")
+                            navController.navigate(Screens.CREDITS.route)
+                        }
+                    }
+                }
             }
         }
 }
@@ -296,7 +301,6 @@ fun InitializationView( viewModel: AuthViewModel, navController: NavHostControll
 @Composable
 fun ProfileMenu(
     title: String,
-    showMenuP: Boolean,
     viewModel: AuthViewModel,
     navController : NavHostController,
     onDismiss: () -> Unit,

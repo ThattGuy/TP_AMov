@@ -9,6 +9,7 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import pt.isec.amov.tp.eguide.data.Category
 import pt.isec.amov.tp.eguide.data.PointOfInterest
+import pt.isec.amov.tp.eguide.data.Review
 import pt.isec.amov.tp.eguide.utils.firebase.FStorageUtil
 import pt.isec.amov.tp.eguide.utils.location.LocationHandler
 
@@ -27,6 +28,9 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
     val categories = MutableLiveData<List<Category>>(ArrayList())
     val listPois = MutableLiveData<List<PointOfInterest>>(ArrayList())
     val locations = MutableLiveData<List<pt.isec.amov.tp.eguide.data.Location>>(ArrayList())
+
+    val reviewsList = MutableLiveData<List<Review>>(ArrayList())
+
     val currentLocation = MutableLiveData(Location(null))
     var selectedCategory = MutableLiveData<String?>(null)
     var selectedLocation = MutableLiveData<String?>(null)
@@ -216,6 +220,16 @@ class LocationViewModel(private val locationHandler: LocationHandler) : ViewMode
         FStorageUtil.deleteCategory(categoryToEdit!!)
         val currentList = categories.value ?: return
         categories.value = currentList.filter { it.name != categoryToEdit }
+    }
+
+    fun addReview( userId: String, reviewTitle: String, reviewText: String, rating: Long) {
+        FStorageUtil.insertPOIReview(poiToEdit.toString(), reviewTitle, userId, reviewText, rating)
+    }
+
+    fun updateReviewsForPOI(poiDocumentName: String) {
+        FStorageUtil.getPOIReviews(poiDocumentName) { reviews ->
+            reviewsList.value = reviews
+        }
     }
 
 }

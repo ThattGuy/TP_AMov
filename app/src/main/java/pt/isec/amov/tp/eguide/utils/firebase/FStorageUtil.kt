@@ -1,6 +1,7 @@
 package pt.isec.amov.tp.eguide.utils.firebase
 
 import android.content.ContentValues
+import android.icu.text.CaseMap.Title
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
@@ -10,13 +11,8 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
-import pt.isec.amov.tp.eguide.data.Category
-import pt.isec.amov.tp.eguide.data.Location
-import pt.isec.amov.tp.eguide.data.PointOfInterest
+import pt.isec.amov.tp.eguide.data.Review
 import java.io.File
-import java.io.IOException
-import java.io.InputStream
 
 class FStorageUtil {
     companion object {
@@ -117,6 +113,47 @@ class FStorageUtil {
                         "Failed to add $collectionName approval for document $documentName for user $userId",
                         e
                     )
+                }
+        }
+
+        fun insertPOIReview(poiDocumentName: String, title: String, createdBy: String, review: String, rating: Long) {
+            val db = Firebase.firestore
+            val data = hashMapOf(
+                "Title" to title,
+                "CreatedBy" to createdBy,
+                "Review" to review,
+                "Rating" to rating
+            )
+
+            db.collection("POI").document(poiDocumentName)
+                .collection("Reviews")
+                .document(title)
+                .set(data)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("Firestore", "POI review added for $poiDocumentName")
+                    } else {
+                        Log.e("Firestore", "Error adding POI review for $poiDocumentName", it.exception)
+                    }
+                }
+        }
+
+        fun getPOIReviews(poiDocumentName: String, callback: (List<Review>) -> Unit) {
+            val db = Firebase.firestore
+            val reviewsRef = db.collection("POI").document(poiDocumentName).collection("Reviews")
+
+            reviewsRef.get()
+                .addOnSuccessListener { documents ->
+                    val reviews = mutableListOf<Review>()
+                    for (document in documents) {
+                        val review = document.toObject(Review::class.java)
+                        reviews.add(review)
+                    }
+                    callback(reviews)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("Firestore", "Error getting reviews for $poiDocumentName", exception)
+                    callback(emptyList())
                 }
         }
 

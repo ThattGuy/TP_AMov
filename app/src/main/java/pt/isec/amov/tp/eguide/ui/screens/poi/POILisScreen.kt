@@ -46,9 +46,10 @@ fun PointOfInterestItem(
         viewModel.getPOIImage(pointOfInterest.name!!) { imageFile.value = it }
     }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp),
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             imageFile.value?.let { uri ->
@@ -60,15 +61,19 @@ fun PointOfInterestItem(
                 )
             }
 
-            Column(modifier = Modifier
-                .padding(8.dp)
-                .weight(1f)
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(1f)
             ) {
                 Text(
                     text = pointOfInterest.name ?: stringResource(id = R.string.no_name),
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = pointOfInterest.description ?: stringResource(id = R.string.no_description))
+                Text(
+                    text = pointOfInterest.description
+                        ?: stringResource(id = R.string.no_description)
+                )
                 Text(text = pointOfInterest.location ?: stringResource(id = R.string.no_location))
                 Text(text = pointOfInterest.category ?: stringResource(id = R.string.no_category))
             }
@@ -81,18 +86,25 @@ fun PointOfInterestItem(
                         navController.navigate(Screens.EDIT_POINT_OF_INTEREST.route)
                     }
                 }
-                if (userId != pointOfInterest.createdBy && !pointOfInterest.isApproved!! && !pointOfInterest.approvedByUsers?.contains(userId)!!) {
+                if (userId != pointOfInterest.createdBy && !pointOfInterest.isApproved!! && !pointOfInterest.approvedByUsers?.contains(
+                        userId
+                    )!!
+                ) {
                     SquareButton(text = stringResource(id = R.string.approve)) {
                         viewModel.approvePOI(pointOfInterest, userId)
                         navController.navigate(Screens.LIST_POINTS_OF_INTEREST.route)
                     }
                 }
+                SquareButton(text = stringResource(id = R.string.view_reviews)) {
+                    viewModel.poiToEdit = pointOfInterest.name.toString()
+                    viewModel.updateReviewsForPOI(pointOfInterest.name.toString())
+                    navController.navigate(Screens.LIST_REVIEWS.route)
+                }
+
             }
         }
     }
 }
-
-
 
 
 @Composable
@@ -105,7 +117,6 @@ fun SquareButton(text: String, onClick: () -> Unit) {
         Text(text = text)
     }
 }
-
 
 
 @Composable
